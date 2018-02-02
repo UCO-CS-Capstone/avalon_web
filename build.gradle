@@ -1,0 +1,31 @@
+apply plugin: 'java'
+apply plugin: 'war'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    // You may define additional repositories, or even remove "mavenCentral()".
+    // Read more about repositories here:
+    //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:repositories
+}
+
+dependencies {
+    // You can read more about how to add dependency here:
+    //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
+    testCompile group: 'junit', name: 'junit', version: '4.10'
+    compile 'org.glassfish:javax.faces:2.3.3'
+    compile 'org.jboss.weld.servlet:weld-servlet-shaded:3.0.0.Final'
+    compile 'javax.servlet:jstl:1.2'
+    compile 'org.glassfish:javax.json:1.1'
+    compile 'org.hibernate.validator:hibernate-validator:6.0.1.Final'
+    compile 'net.bootsfaces:bootsfaces:1.2.0'
+    compile 'org.omnifaces:omnifaces:3.0'
+}
+war {
+   archiveName = 'ROOT.war'
+   //classpath fileTree(dir: 'bsflib', include: '*') // adds a file-set to the WEB-INF/lib dir.
+}

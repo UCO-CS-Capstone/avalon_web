@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <title>Hello world</title>
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+        <meta name="KEYWORDS" content="" />
+        <meta name="robots" content="index, follow" />
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="revisit-after" content="7 days" />
+        <meta name="DISTRIBUTION" content="GLOBAL" />
+        <meta http-equiv="PRAGMA" content="NO-CACHE" />
+        <meta name="copyright" content="" />
+
+        <link rel="stylesheet" href="/resources/bootstrap.min.css" />
+    </h:head>
+    <h:body style="padding-top: 85px;padding-bottom: 85px;" addLabels="false" addMessages="false">
+        <ui:insert name="nbtop">
+            <ui:include src="/applayout/navbartop.xhtml"/>
+        </ui:insert>
+        
+        <b:container>
+            <ui:insert name="content"/>
+        </b:container>
+        
+        <ui:insert name="nbtop">
+            <ui:include src="/applayout/navbarbottom.xhtml"/>
+        </ui:insert>
+    </h:body>
+</html>
