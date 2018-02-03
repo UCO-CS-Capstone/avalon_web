@@ -1,0 +1,38 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Dockerfile" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+    <deployment type="dockerfile">
+      <settings>
+        <option name="JSONFilePath" value="" />
+        <option name="command" value="" />
+        <option name="commandLineOptions" value="" />
+        <option name="containerName" value="" />
+        <option name="entrypoint" value="" />
+        <option name="imageTag" value="tomcat:8.5.27" />
+        <option name="portBindings">
+          <list>
+            <DockerPortBindingImpl>
+              <option name="containerPort" value="8080" />
+              <option name="hostPort" value="8080" />
+            </DockerPortBindingImpl>
+          </list>
+        </option>
+        <option name="sourceFilePath" value="Dockerfile" />
+        <option name="startBrowserSettings">
+          <browser url="http://127.0.0.1" />
+        </option>
+        <option name="volumeBindings">
+          <list>
+            <DockerVolumeBindingImpl>
+              <option name="containerPath" value="/usr/local/tomcat/webapps/ROOT" />
+              <option name="hostPath" value="$PROJECT_DIR$/build/libs/exploded/ROOT.war" />
+            </DockerVolumeBindingImpl>
+          </list>
+        </option>
+      </settings>
+    </deployment>
+    <method>
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="build" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+      <option name="LaunchBrowser.Before.Run" url="http://localhost:8080/" />
+    </method>
+  </configuration>
+</component>
