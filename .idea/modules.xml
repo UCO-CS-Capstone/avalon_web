@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Avalon.iml" filepath="$PROJECT_DIR$/.idea/modules/Avalon.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Avalon_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Avalon_main.iml" group="Avalon" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Avalon_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Avalon_test.iml" group="Avalon" />
-      <module fileurl="file://$PROJECT_DIR$/BootsFaces-examples.iml" filepath="$PROJECT_DIR$/BootsFaces-examples.iml" />
     </modules>
   </component>
 </project>
