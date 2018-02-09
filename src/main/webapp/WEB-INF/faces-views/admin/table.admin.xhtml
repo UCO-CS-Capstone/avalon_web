@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<ui:composition template="/applayout/pageTemplate.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/applayout/pageTemplate.xhtml">
+        <ui:define name="content">
+            <h:body style="padding-top: 40px; background-color: #blue;">
+                <b:container>
+
+        <h:form>
+            <b:button value="Add New User" look="success" onclick="$('.modalPseudoClass2').modal()" size="md"/>
+
+
+
+            </h:form>
+
+
+                    <h:form id="myFormID">
+                        <b:modal id="amodal2" title="Enter Information" styleClass="modalPseudoClass2"
+                                 closable="false"  close-on-escape="false" backdrop="false">
+
+
+
+                                <b:inputText label="First name" />
+                                <b:inputText label="Last name"  />
+
+
+
+
+
+
+
+
+                                <b:inputText label="Zip code"  />
+                                <b:inputText label="City"  />
+
+
+                                <b:commandButton  name = "add" value="Create" icon="add"
+                                                  ajax="true"
+                                                 onclick = "ajax:car.add(car)">
+                                </b:commandButton>
+
+
+                            <f:facet name="footer">
+                                <b:button value="Close" dismiss="modal" />
+                                <b:button value="Ok" look="primary" dismiss="modal" />
+                            </f:facet>
+                        </b:modal>
+                    </h:form>
+
+
+
+
+
+
+
+                    <h:form>
+
+
+
+                        <b:dataTable value="#{order.orderList}" var="car" class="editableCarTable">
+                            <b:dataTableColumn value="#{car.userName}" />
+                            <b:dataTableColumn value="#{car.email}" />
+                            <b:dataTableColumn value="#{car.user_id}" />
+
+
+
+                            <b:dataTableColumn>
+                                <b:commandButton name ="edit" value="edit" icon="edit" ajax="true" update="@(.editableCarTable)" onclick = "ajax:car.edit()">
+
+                                </b:commandButton>
+                            </b:dataTableColumn>
+                            <b:dataTableColumn>
+                                <b:commandButton name = "delete" value="delete user" look="danger" ajax="true" update="@(.editableCarTable)"
+                                                 onclick = "ajax:car.delete()">
+                                </b:commandButton>
+
+                            </b:dataTableColumn>
+
+                            <b:dataTableColumn>
+                                <b:commandButton name = "deactivate" value="deactivate account" look="warning" ajax="true" update="@(.editableCarTable)"
+                                                 onclick = "ajax:car.deactivate()">
+                                </b:commandButton>
+
+                            </b:dataTableColumn>
+                        </b:dataTable>
+                    </h:form>
+
+
+
+                </b:container>
+            </h:body>
+
+
+        </ui:define>
+    </ui:composition>
+</ui:composition>
