@@ -15,13 +15,13 @@
                     <b:dataTableColumn value="#{equipment.name}" order="asc" />
                     <b:dataTableColumn value="#{equipment.type}" label="Type" />
                     <b:dataTableColumn label="" orderable="false">
-                        <b:commandButton look="info" value="Edit" iconAwesome="pencil-square-o" action="#{equipmentBean.beforeEditing(equipment.equipmentID)}" />
-                        <b:commandButton look="primary" value="Delete" iconAwesome="trash" style="margin-left: 10px;"/>
+                        <b:commandButton look="warning" value="Edit" iconAwesome="pencil-square-o" action="#{equipmentBean.beforeEditing(equipment.equipmentID)}" />
+                        <b:commandButton look="danger" value="Delete" iconAwesome="trash" style="margin-left: 10px;"/>
                                          onclick="if (!confirm('Are you sure you want to delete the current piece of equipment?')) return false"
                                          action="#{equipmentBean.deleteEquipment(equipment.equipmentID)}" />
                     </b:dataTableColumn>
                 </b:dataTable>
-                <b:commandButton look="success" value="Create Equipment" iconAwesome="plus" action="/Equipment/create"/><!--action="#{equipmentBean.beforeCreate}" />-->
+                <b:commandButton look="success" value="Create Equipment" iconAwesome="plus" action="/Equipment/create" />
             </h:form>
         </ui:define>
     </ui:composition>

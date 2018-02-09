@@ -3,10 +3,10 @@ package edu.uco.avalon;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 
-@ManagedBean(name="order")
+@Named(value="order")
 @SessionScoped
 public class UserBean implements Serializable{
 

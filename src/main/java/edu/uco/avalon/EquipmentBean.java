@@ -67,7 +67,7 @@ public class EquipmentBean implements Serializable {
         this.equipmentID = equipment.getEquipmentID();
         this.name = equipment.getName();
         this.type = equipment.getType();
-        return "Equipment/edit";
+        return "/Equipment/edit";
     }
 
     public String editEquipment () throws Exception{
@@ -79,7 +79,7 @@ public class EquipmentBean implements Serializable {
         oldEquipment.setLastUpdatedBy("user");
         EquipmentRepository.updateEquipment(oldEquipment);
         equipmentList = EquipmentRepository.readAllEquipment().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
-        return "Equipment/index";
+        return "/Equipment/index";
     }
 
     public void deleteEquipment(int equipmentID) throws Exception{

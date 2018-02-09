@@ -9,7 +9,7 @@ public class Schedule{
     private String equipmentType;
     private LocalDate allocateDate;
     private boolean allocated;
-}
+
 
     public int getEquipmentID() {
         return equipmentID;
@@ -37,12 +37,11 @@ public class Schedule{
     }
 
 
-
-    public LocalDateTime getAllocateDate() {
+    public LocalDate getAllocateDate() {
         return allocateDate;
     }
 
-    public void setAllocateDate(LocalDateTime allocateDate) {
+    public void setAllocateDate(LocalDate allocateDate) {
         this.allocateDate = allocateDate;
     }
 
@@ -54,4 +53,5 @@ public class Schedule{
     public void setAllocated(boolean allocated) {
         this.allocated = allocated;
     }
+}
 
