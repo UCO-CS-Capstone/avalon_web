@@ -9,7 +9,7 @@ import java.util.List;
 public class EquipmentRepository {
 
     public static List<Equipment> readAllEquipment() throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalondb", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
         if (conn == null) {
             throw new SQLException("conn is null");
         }
@@ -39,7 +39,7 @@ public class EquipmentRepository {
     }
 
     public static Equipment readOneEquipment(int equipmentID) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalondb", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
         if (conn == null) {
             throw new SQLException("conn is null");
         }
@@ -68,7 +68,7 @@ public class EquipmentRepository {
     }
 
     public static void createEquipment(Equipment equipment) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalondb", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
         if (conn == null) {
             throw new SQLException("conn is null");
         }
@@ -86,7 +86,7 @@ public class EquipmentRepository {
     }
 
     public static void updateEquipment(Equipment equipment) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalondb", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
         if (conn == null) {
             throw new SQLException("conn is null");
         }
@@ -106,7 +106,7 @@ public class EquipmentRepository {
     }
 
     public static void deleteEquipment(int equipmentID) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalondb", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
         if (conn == null) {
             throw new SQLException("conn is null");
         }
