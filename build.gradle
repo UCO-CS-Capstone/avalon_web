@@ -25,6 +25,7 @@ dependencies {
     compile 'net.bootsfaces:bootsfaces:1.2.0'
     compile 'org.omnifaces:omnifaces:3.0'
     compile 'org.mariadb.jdbc:mariadb-java-client:2.2.1'
+    compile 'de.mkammerer:argon2-jvm:2.3'
 }
 war {
    archiveName = 'ROOT.war'

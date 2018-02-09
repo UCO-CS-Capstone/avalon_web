@@ -11,37 +11,38 @@
 	    	Hint to editors: The menus follow the Chicago style of capitalization. Please capitalize everything but the "smaller" words. 
 	     -->
   </ui:remove>
-    <b:navBar brand="Avalon"
-              brandHref="https://avalon.gabe565.com/" inverse="true"
-              fixed="top">
-        <b:container>
-            <b:navbarLinks>
-                <b:navLink />
-                <b:navLink />
+    <h:form>
+        <b:navBar brand="Avalon"
+                  brandHref="https://avalon.gabe565.com/" inverse="true"
+                  fixed="top">
+            <b:container>
                 <b:navbarLinks>
-                    <b:navLink outcome="/index" value="Home" iconAwesome="home" />
-                    <b:navLink outcome="/Project/index" value="Project" iconAwesome="folder" />
-                    <b:navLink outcome="/Equipment/index" value="Equipment" iconAwesome="truck"/>
-                    <b:navLink outcome="/admin/table.admin" value="admin" iconAwesome="wrench" />
-                    
+                    <b:navLink />
+                    <b:navLink />
+                    <b:navbarLinks>
+                        <b:navLink outcome="index" value="Home" iconAwesome="home" />
+                        <b:navLink outcome="/index" value="Home" iconAwesome="home" />
+                        <b:navLink outcome="/Project/index" value="Project" iconAwesome="folder" />
+                        <b:navLink outcome="/Equipment/index" value="Equipment" iconAwesome="truck"/>
+                        <b:navLink outcome="/admin/table.admin" value="admin" iconAwesome="wrench" />
+                    </b:navbarLinks>
+                    <!--<b:dropMenu value="Examples">-->
+                        <!--<b:navLink value="Starter Template" outcome="/starter_template" icon="play-circle" />-->
+                        <!--<b:navLink value="Grid" outcome="/grid" icon="play-circle" />-->
+                        <!--<b:navLink value="Jumbotron" outcome="/jumbotron" icon="play-circle" />-->
+                        <!--<b:navLink value="Navbar" outcome="/navbar" icon="play-circle" />-->
+                        <!--<b:navLink value="Static T  op navbar" outcome="/navbar-static-top" icon="play-circle" />-->
+                        <!--<b:navLink value="Fixed Top navbar" outcome="/navbar-fixed-top" icon="play-circle" />-->
+                        <!--<b:navLink value="Dashboard" outcome="/dashboard" icon="play-circle" />-->
+                        <!--<b:navLink value="Sign in" outcome="/signin" icon="play-circle" />-->
+                        <!--<b:navLink value="Theme" outcome="/theme" icon="play-circle" />-->
+                    <!--</b:dropMenu>-->
                 </b:navbarLinks>
-                <!--<b:dropMenu value="Examples">-->
-                    <!--<b:navLink value="Starter Template" outcome="/starter_template" icon="play-circle" />-->
-                    <!--<b:navLink value="Grid" outcome="/grid" icon="play-circle" />-->
-                    <!--<b:navLink value="Jumbotron" outcome="/jumbotron" icon="play-circle" />-->
-                    <!--<b:navLink value="Navbar" outcome="/navbar" icon="play-circle" />-->
-                    <!--<b:navLink value="Static T  op navbar" outcome="/navbar-static-top" icon="play-circle" />-->
-                    <!--<b:navLink value="Fixed Top navbar" outcome="/navbar-fixed-top" icon="play-circle" />-->
-                    <!--<b:navLink value="Dashboard" outcome="/dashboard" icon="play-circle" />-->
-                    <!--<b:navLink value="Sign in" outcome="/signin" icon="play-circle" />-->
-                    <!--<b:navLink value="Theme" outcome="/theme" icon="play-circle" />-->
-                <!--</b:dropMenu>-->
-            </b:navbarLinks>
 
-            <!--<b:navbarLinks pull="right">-->
-                <!--<b:navLink href="http://showcase.bootsfaces.net/" value="Showcase" iconAwesome="desktop" />-->
-            <!--</b:navbarLinks>-->
-        </b:container>
-    </b:navBar>
-
+                <b:navbarLinks pull="right">
+                    <b:navCommandLink action="#{loginBean.logout}" value="#{loginBean.loggedIn ? loginBean.email : 'Login'}" iconAwesome="sign-out" iconAlign="right" update="@form"/>
+                </b:navbarLinks>
+            </b:container>
+        </b:navBar>
+    </h:form>
 </ui:fragment>

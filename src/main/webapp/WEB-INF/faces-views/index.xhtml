@@ -8,8 +8,32 @@
 
     <ui:composition template="/applayout/pageTemplate.xhtml">
         <ui:define name="content">
-            <h1>Hello world</h1>
-
+            <b:container>
+                <b:column span="6" offset="3">
+                    <h:form>
+                        <h2>Sign In</h2>
+                        <hr/>
+                        <b:messages/>
+                        <b:inputText id="email" placeholder="Email address" value="#{loginBean.email}">
+                            <f:facet name="prepend">
+                                <b:iconAwesome name="envelope" />
+                            </f:facet>
+                        </b:inputText>
+                        <b:inputText id="password" placeholder="Password" type="password" value="#{loginBean.password}">
+                            <f:facet name="prepend">
+                                <b:iconAwesome name="key" />
+                            </f:facet>
+                        </b:inputText>
+                        <b:selectBooleanCheckbox value="true" caption="Remember Me"/>
+                        <b:column span="6">
+                            <b:commandButton action="#{loginBean.login}" look="primary btn-block" value="Sign In" iconAwesome="sign-in" size="md" iconAlign="right"/>
+                        </b:column>
+                        <b:column span="6">
+                            <b:commandButton value="Login Help" look="danger btn-block" iconAwesome="question-circle" size="md" iconAlign="right" update="@form" />
+                        </b:column>
+                    </h:form>
+                </b:column>
+            </b:container>
         </ui:define>
     </ui:composition>
 </ui:composition>
