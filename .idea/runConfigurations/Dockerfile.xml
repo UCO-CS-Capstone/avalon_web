@@ -24,7 +24,7 @@
           <list>
             <DockerVolumeBindingImpl>
               <option name="containerPath" value="/usr/local/tomcat/webapps/ROOT" />
-              <option name="hostPath" value="$PROJECT_DIR$/build/libs/exploded/ROOT.war" />
+              <option name="hostPath" value="C:\Users\velas\IdeaProjects\avalon_web\build\libs\exploded\ROOT.war" />
             </DockerVolumeBindingImpl>
           </list>
         </option>

@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="war" build-on-make="true" name="Gradle : ROOT.war">
+  <artifact type="war" name="Gradle : ROOT.war">
     <output-path>$PROJECT_DIR$/build/libs</output-path>
     <properties id="gradle-properties">
       <options external-project-path="$PROJECT_DIR$" />
