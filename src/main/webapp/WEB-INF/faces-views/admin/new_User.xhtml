@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<ui:composition template="/applayout/pageTemplate.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/applayout/pageTemplate.xhtml">
+        <ui:define name="content">
+            <h:body style="padding-top: 60px; background-color: #add;">
+                <b:container>
+
+                    <b:form>
+
+
+                                    <b:inputText label="First name" />
+                                    <b:inputText label="Last name"  />
+
+
+
+
+
+
+
+
+                                    <b:inputText label="Zip code"  />
+                                    <b:inputText label="City"  />
+
+
+                        <b:commandButton action = "new_User.xhtml" name = "add" value="Create" icon="add" ajax="true" update="@(.editableCarTable)"
+                                         onclick = "ajax:car.add(car)">
+                        </b:commandButton>
+
+                    </b:form>
+                </b:container>
+            </h:body>
+
+
+        </ui:define>
+    </ui:composition>
+</ui:composition>
+
+
+
+
