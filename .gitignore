@@ -1,7 +1,8 @@
 bsflib
 build
 .gradle
-
+.DS_Store
+Thumbs.db
 
 # NetBeans
 nbproject/private/
