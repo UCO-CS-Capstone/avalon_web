@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<ui:composition template="/applayout/pageTemplate.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/applayout/pageTemplate.xhtml">
+        <ui:define name="content">
+            <h1>Equipment List</h1>
+            <hr/>
+            <h:form>
+                <b:dataTable value="#{equipmentBean.equipmentList}" var="project">
+                    <b:dataTableColumn value="#{equipment.name}" order="asc" />
+                    <b:dataTableColumn value="#{equipment.type}" label="Type" />
+                    <b:dataTableColumn label="" orderable="false">
+                        <b:commandButton look="warning" value="Edit" iconAwesome="pencil-square-o" action="#{equipmentBean.beforeEditing(equipment.equipmentID)}" />
+                        <b:commandButton look="danger" value="Delete" iconAwesome="trash" style="margin-left: 10px;"/>
+                                         onclick="if (!confirm('Are you sure you want to delete the current piece of equipment?')) return false"
+                                         action="#{equipmentBean.deleteEquipment(equipment.equipmentID)}" />
+                    </b:dataTableColumn>
+                </b:dataTable>
+                <b:commandButton look="success" value="Create Equipment" iconAwesome="plus" action="/equipment/create" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</ui:composition>

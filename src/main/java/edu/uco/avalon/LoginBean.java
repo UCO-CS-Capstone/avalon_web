@@ -87,11 +87,11 @@ public class LoginBean implements Serializable {
         this.attempts = attempts;
     }
 
-    public void login() throws SQLException {
+    public String login() throws SQLException {
         if (attempts >= 5) {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage("form", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Too many login attempts."));
-            return;
+            return "";
         }
         Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
         if (conn == null) {
@@ -105,14 +105,15 @@ public class LoginBean implements Serializable {
             ResultSet rs = ps.executeQuery();
             String hashed;
             if (rs.next()) {
-                this.userID = rs.getInt("userID");
-                this.firstName = rs.getString("first_name");
-                this.lastName = rs.getString("last_name");
-                this.locked = rs.getBoolean("isLocked");
                 hashed = rs.getString("password");
 
                 if (argon2.verify(hashed, this.password)) {
                     this.loggedIn = true;
+
+                    this.userID = rs.getInt("userID");
+                    this.firstName = rs.getString("first_name");
+                    this.lastName = rs.getString("last_name");
+                    this.locked = rs.getBoolean("isLocked");
                 }
             }
         } finally {
@@ -126,6 +127,9 @@ public class LoginBean implements Serializable {
             this.email = "";
             this.loggedIn = false;
             ++this.attempts;
+            return "";
+        } else {
+            return "/dashboard?faces-redirect=true";
         }
     }
 
@@ -159,5 +163,9 @@ public class LoginBean implements Serializable {
 
     public void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
+    }
+
+    public String getFullname() {
+        return this.firstName + ' ' + this.lastName;
     }
 }

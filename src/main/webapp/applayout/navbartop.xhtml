@@ -20,10 +20,10 @@
                     <b:navLink />
                     <b:navLink />
                     <b:navbarLinks>
-                        <b:navLink outcome="/index" value="Home" iconAwesome="home" />
-                        <b:navLink outcome="/Project/index" value="Project" iconAwesome="folder" />
-                        <b:navLink outcome="/Equipment/index" value="Equipment" iconAwesome="truck"/>
-                        <b:navLink outcome="/admin/index" value="admin" iconAwesome="wrench" />
+                        <b:navLink outcome="#{loginBean.loggedIn ? '/dashboard' : '/index'}" value="Home" iconAwesome="home" />
+                        <b:navLink outcome="/project/index" value="Project" iconAwesome="folder" />
+                        <b:navLink outcome="/equipment/index" value="Equipment" iconAwesome="truck"/>
+                        <b:navLink outcome="/admin/index" value="Admin" iconAwesome="wrench" />
                     </b:navbarLinks>
                     <!--<b:dropMenu value="Examples">-->
                         <!--<b:navLink value="Starter Template" outcome="/starter_template" icon="play-circle" />-->
@@ -39,7 +39,7 @@
                 </b:navbarLinks>
 
                 <b:navbarLinks pull="right">
-                    <b:navCommandLink action="#{loginBean.logout}" value="#{loginBean.loggedIn ? loginBean.email : 'Login'}" iconAwesome="sign-out" iconAlign="right" update="@form"/>
+                    <b:navCommandLink action="#{loginBean.logout}" value="#{loginBean.loggedIn ? loginBean.fullname : 'Login'}" iconAwesome="sign-out" iconAlign="right" update="@form"/>
                 </b:navbarLinks>
             </b:container>
         </b:navBar>

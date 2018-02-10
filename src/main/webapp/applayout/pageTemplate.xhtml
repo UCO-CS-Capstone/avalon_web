@@ -7,7 +7,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
     <h:head>
-        <title>Hello world</title>
+        <title>Avalon</title>
         <meta name="author" content="" />
         <meta name="description" content="" />
         <meta name="KEYWORDS" content="" />
@@ -20,6 +20,10 @@
         <meta name="copyright" content="" />
 
         <link rel="stylesheet" href="/resources/bootstrap.min.css" />
+
+        <b:container>
+            <ui:insert name="other-header"/>
+        </b:container>
     </h:head>
     <h:body style="padding-top: 85px;padding-bottom: 85px;" addLabels="false" addMessages="false">
         <ui:insert name="nbtop">
@@ -33,5 +37,9 @@
         <ui:insert name="nbtop">
             <ui:include src="/applayout/navbarbottom.xhtml"/>
         </ui:insert>
+
+        <b:container>
+            <ui:insert name="other-footer"/>
+        </b:container>
     </h:body>
 </html>
