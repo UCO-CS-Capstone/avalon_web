@@ -51,7 +51,7 @@ public class ProjectBean implements Serializable {
         this.actEndDate = null;
         this.estCostOverall = 0.0;
         this.currentCost = 0.0;
-        return "/Project/create";
+        return "/project/create";
     }
 
     public String createProject() throws Exception {
