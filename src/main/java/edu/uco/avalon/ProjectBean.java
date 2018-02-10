@@ -68,7 +68,7 @@ public class ProjectBean implements Serializable {
         ProjectRepository.createProject(newProject);
 //        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         projectList = ProjectRepository.readAllProject().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
-        return "/Project/index";
+        return "/project/index";
     }
 
     public String beforeEditing(int projectID) throws Exception {
@@ -83,7 +83,7 @@ public class ProjectBean implements Serializable {
             this.actEndDate = null;
         this.estCostOverall = project.getEstCostOverall();
         this.currentCost = project.getCurrentCost();
-        return "/Project/edit";
+        return "/project/edit";
     }
 
     public String editProject() throws Exception {
@@ -100,7 +100,7 @@ public class ProjectBean implements Serializable {
         oldProject.setLastUpdatedBy("user");
         ProjectRepository.updateProject(oldProject);
         projectList = ProjectRepository.readAllProject().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
-        return "/Project/index";
+        return "/project/index";
     }
 
     public void deleteProject(int projectID) throws Exception {
