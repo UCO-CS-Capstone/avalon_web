@@ -10,6 +10,15 @@ public class Schedule{
     private LocalDate allocateDate;
     private boolean allocated;
 
+    public Schedule() { }
+
+    public Schedule(int equipmentID, String equipmentName, String equipmentType, LocalDate allocateDate, boolean allocated) {
+        this.equipmentID = equipmentID;
+        this.equipmentName = equipmentName;
+        this.equipmentType = equipmentType;
+        this.allocateDate = allocateDate;
+        this.allocated = allocated;
+    }
 
     public int getEquipmentID() {
         return equipmentID;

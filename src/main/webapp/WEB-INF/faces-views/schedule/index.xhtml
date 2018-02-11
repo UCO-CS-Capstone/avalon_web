@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:b="http://bootsfaces.net/ui"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition template="/applayout/pageTemplate.xhtml">
+    <ui:define name="content">
+        <h1>Schedule List</h1>
+        <hr/>
+        <h:form id="myFormID">
+            <b:modal id="amodal2" title="Enter Information" styleClass="editModal"
+                     closable="false"  close-on-escape="false" backdrop="false">
+                <b:inputText label="Equipment ID" value="#{schedule.equipmentID}" />
+                <b:inputText label="Equipment Name" value="#{schedule.equipmentName}" />
+                <b:inputText label="Equipment Type" value="#{schedule.equipmentType}" />
+                <b:selectBooleanCheckbox label="Allocated"  value="#{schedule.allocated}"  caption="Allocated"/>
+                <b:inputText label="Allocate Date" value="#{schedule.allocateDate}"/>
+                <b:commandButton  name="add" value="Create" icon="add"
+                                  ajax="true"
+                                  update=":listForm:scheduleTable"
+                                  onclick="ajax:schedule.create()">
+                </b:commandButton>
+                <f:facet name="footer">
+                    <b:button value="Close" dismiss="modal" />
+                    <b:button value="Ok" look="primary" dismiss="modal" />
+                </f:facet>
+            </b:modal>
+        </h:form>
+        <h:form id="listForm">
+            <b:dataTable value="#{schedule.schedules}" var="sche" class="editableCarTable" id="scheduleTable">
+                <b:dataTableColumn value="#{sche.equipmentID}" />
+                <b:dataTableColumn value="#{sche.equipmentName}" />
+                <b:dataTableColumn value="#{sche.equipmentType}" />
+                <b:dataTableColumn value="#{sche.allocated}" />
+                <b:dataTableColumn value="#{sche.allocateDate}" />
+                <b:dataTableColumn label="">
+                    <b:commandButton
+                            name="edit"
+                            value="edit"
+                            icon="edit"
+                            ajax="true"
+                            update="@(.editableCarTable)"
+                            actionListener="#{schedule.beforeEdit(sche)}"
+                            action="$('.editModal').modal()"
+                    >
+                    </b:commandButton>
+                </b:dataTableColumn>
+                <b:dataTableColumn label="">
+                    <b:commandButton
+                            name="delete"
+                            value="delete"
+                            look="danger"
+                            ajax="true"
+                            icon="trash"
+                            update="@(.editableCarTable)"
+                            onclick="ajax:schedule.delete(sche)">
+                    </b:commandButton>
+                </b:dataTableColumn>
+            </b:dataTable>
+            <b:button value="Create Schedule" iconAwesome="plus"  look="success" onclick="$('.editModal').modal()"/>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
