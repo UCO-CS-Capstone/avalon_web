@@ -89,6 +89,10 @@ public class LoginBean implements Serializable {
 
     public String login() throws SQLException {
         if (attempts >= 5) {
+            this.email = "";
+            this.password = "";
+            this.loggedIn = false;
+
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage("form", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Too many login attempts."));
             return "";
@@ -125,6 +129,7 @@ public class LoginBean implements Serializable {
             fc.addMessage("form", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Invalid username or password."));
 
             this.email = "";
+            this.password = "";
             this.loggedIn = false;
             ++this.attempts;
             return "";
