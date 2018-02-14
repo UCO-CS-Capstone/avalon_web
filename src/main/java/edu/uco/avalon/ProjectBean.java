@@ -2,12 +2,12 @@ package edu.uco.avalon;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -23,8 +23,8 @@ public class ProjectBean implements Serializable {
     private Date startDate;
     private Date estEndDate;
     private Date actEndDate;
-    private double estCostOverall;
-    private double currentCost;
+    private String estCostOverall;
+    private String currentCost;
 
     @PostConstruct
     public void init() {
@@ -49,20 +49,22 @@ public class ProjectBean implements Serializable {
         this.startDate = null;
         this.estEndDate = null;
         this.actEndDate = null;
-        this.estCostOverall = 0.0;
-        this.currentCost = 0.0;
+        this.estCostOverall = null;
+        this.currentCost = null;
         return "/project/create";
     }
 
     public String createProject() throws Exception {
         Project newProject = new Project();
         newProject.setName(this.name);
-        newProject.setStartDate(new java.sql.Date(this.startDate.getTime()).toLocalDate());
-        newProject.setEstEndDate(new java.sql.Date(this.estEndDate.getTime()).toLocalDate());
+        if (this.startDate != null)
+            newProject.setStartDate(new java.sql.Date(this.startDate.getTime()).toLocalDate());
+        if (this.estEndDate != null)
+            newProject.setEstEndDate(new java.sql.Date(this.estEndDate.getTime()).toLocalDate());
         if (this.actEndDate != null)
             newProject.setActEndDate(new java.sql.Date(this.actEndDate.getTime()).toLocalDate());
-        newProject.setEstCostOverall(this.estCostOverall);
-        newProject.setCurrentCost(this.currentCost);
+        newProject.setCurrentCost(Helpers.parse(this.currentCost, Locale.US));
+        newProject.setEstCostOverall(Helpers.parse(this.estCostOverall, Locale.US));
         newProject.setLastUpdatedDate(LocalDateTime.now());
         newProject.setLastUpdatedBy("user");
         ProjectRepository.createProject(newProject);
@@ -75,14 +77,20 @@ public class ProjectBean implements Serializable {
         Project project = ProjectRepository.readOneProject(projectID);
         this.projectID = project.getProjectID();
         this.name = project.getName();
-        this.startDate = java.sql.Date.valueOf(project.getStartDate());
-        this.estEndDate = java.sql.Date.valueOf(project.getEstEndDate());
+        if (project.getStartDate() != null)
+            this.startDate = java.sql.Date.valueOf(project.getStartDate());
+        else
+            this.startDate = null;
+        if (project.getEstEndDate() != null)
+            this.estEndDate = java.sql.Date.valueOf(project.getEstEndDate());
+        else
+            this.estEndDate = null;
         if (project.getActEndDate() != null)
            this.actEndDate = java.sql.Date.valueOf(project.getActEndDate());
         else
             this.actEndDate = null;
-        this.estCostOverall = project.getEstCostOverall();
-        this.currentCost = project.getCurrentCost();
+        this.estCostOverall = String.valueOf(project.getEstCostOverall());
+        this.currentCost = String.valueOf(project.getCurrentCost());
         return "/project/edit";
     }
 
@@ -90,12 +98,14 @@ public class ProjectBean implements Serializable {
         Project oldProject = new Project();
         oldProject.setProjectID(this.projectID);
         oldProject.setName(this.name);
-        oldProject.setStartDate(new java.sql.Date(this.startDate.getTime()).toLocalDate());
-        oldProject.setEstEndDate(new java.sql.Date(this.estEndDate.getTime()).toLocalDate());
+        if (this.startDate != null)
+            oldProject.setStartDate(new java.sql.Date(this.startDate.getTime()).toLocalDate());
+        if (this.estEndDate != null)
+            oldProject.setEstEndDate(new java.sql.Date(this.estEndDate.getTime()).toLocalDate());
         if (this.actEndDate != null)
             oldProject.setActEndDate(new java.sql.Date(this.actEndDate.getTime()).toLocalDate());
-        oldProject.setEstCostOverall(this.estCostOverall);
-        oldProject.setCurrentCost(this.currentCost);
+        oldProject.setEstCostOverall(Helpers.parse(this.estCostOverall, Locale.US));
+        oldProject.setCurrentCost(Helpers.parse(this.currentCost, Locale.US));
         oldProject.setLastUpdatedDate(LocalDateTime.now());
         oldProject.setLastUpdatedBy("user");
         ProjectRepository.updateProject(oldProject);
@@ -140,19 +150,19 @@ public class ProjectBean implements Serializable {
         this.actEndDate = actEndDate;
     }
 
-    public double getEstCostOverall() {
+    public String getEstCostOverall() {
         return estCostOverall;
     }
 
-    public void setEstCostOverall(double estCostOverall) {
+    public void setEstCostOverall(String estCostOverall) {
         this.estCostOverall = estCostOverall;
     }
 
-    public double getCurrentCost() {
+    public String getCurrentCost() {
         return currentCost;
     }
 
-    public void setCurrentCost(double currentCost) {
+    public void setCurrentCost(String currentCost) {
         this.currentCost = currentCost;
     }
 }
