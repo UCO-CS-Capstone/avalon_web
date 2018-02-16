@@ -1,6 +1,5 @@
 package edu.uco.avalon;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,7 +151,7 @@ public class ProjectRepository {
 
     }
 
-    public static void deleteProject(int projectID) throws SQLException {
+    public static void deleteProject(Project project) throws SQLException {
 
 //        if (ds == null) {
 //            throw new SQLException("ds is null.");
@@ -164,10 +163,12 @@ public class ProjectRepository {
         }
 
         try {
-            String query = "UPDATE projects SET isDeleted = ? WHERE projectID = ?";
+            String query = "UPDATE projects SET isDeleted=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE projectID=?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setBoolean(1, true);
-            ps.setInt(2, projectID);
+            ps.setTimestamp(2, Timestamp.valueOf(project.getLastUpdatedDate()));
+            ps.setString(3, project.getLastUpdatedBy());
+            ps.setInt(4, project.getProjectID());
             ps.executeUpdate();
         }
         finally {
