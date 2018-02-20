@@ -4,71 +4,49 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    String title;
-    String author;
-    int price;
-    int quant;
-    int sub;
+    private String userName;
+    private String userType;
+    private String email;
+    private int age;
 
 
-    public User(String title, String author, int price, int quant, int sub) {
-        this.title = title;
-        this.author = author;
-        this.price = price;
-        this.quant = quant;
-        this.sub = sub;
-
+    public User(String userName, String userType, String email, int age) {
+        this.userName = userName;
+        this.userType = userType;
+        this.email = email;
+        this.age = age;
     }
 
-    public int getPrice() {
-        return price;
+    public String getUserName() {
+        return userName;
     }
 
-
-
-
-    public double getSub() {
-        return sub;
+    public String getUserType() {
+        return userType;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
-    public void setSub(int sub) {
-        this.sub = sub;
+    public String getEmail() {
+        return email;
     }
 
-
-
-    public int getQuant() {
-        return quant;
+    public int getAge() {
+        return age;
     }
 
-    public void setQuant(int quant) {
-        this.quant = quant;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
-
-
-
-
-
-    public String getTitle() {
-        return title;
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public void setUserType(int age) {
+        this.age = age;
     }
 
 
 
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
 
 }
