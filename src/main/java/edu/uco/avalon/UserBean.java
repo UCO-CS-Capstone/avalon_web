@@ -23,32 +23,43 @@ public class UserBean implements Serializable{
 
 
     private DataSource ds;
-    private List<User> userList;
 
-
-
-
-
-
+    public ArrayList<User>userListDB;
 
 
 
     @PostConstruct
-    private void init() {
-        userList = new ArrayList<>();
-        userList.add(new User("John Travolta", "Admin", "john.doe@example.com", 32));
-        userList.add(new User("Peter Griffin", "User", "peter.smith@example.com", 25));
-        userList.add(new User("Mary Poppins", "User", "mary.jane@example.com", 27));
-        userList.add(new User("Mike Tyson", "User", "mike.skeet@example.com", 35));
+    public void init() {
+        userListDB = DataBaseOps.getUsers();
     }
 
-    public List<User> getUserList() {
-        return userList;
+    /* Method Used To Fetch All Records From The Database */
+    public ArrayList<User> userList() {
+        return userListDB;
     }
 
-    public int getUserCount() {
-        return userList.size();
+    /* Method Used To Save New Student Record */
+    public String insertUsers(User newStudentObj) {
+        return DataBaseOps.insertUser(newStudentObj);
     }
+
+    /* Method Used To Edit Student Record */
+    public String editUser(int studentId) {
+        return DataBaseOps.edit(studentId);
+    }
+
+    /* Method Used To Update Student Record */
+    public String updateStudentDetails(User updateStudentObj) {
+        return DataBaseOps.updateUser(updateStudentObj);
+    }
+
+    /* Method Used To Delete Student Record */
+    public String delete(int studentId) {
+        return DataBaseOps.deleteUser(studentId);
+    }
+
+
+
 
 
 

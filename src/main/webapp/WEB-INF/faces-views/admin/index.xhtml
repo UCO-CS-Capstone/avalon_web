@@ -12,7 +12,7 @@
                 <b:container>
 
         <h:form>
-            <b:button value="Add New User" look="success" onclick="$('.modalPseudoClass2').modal()" size="md"/>
+            <b:commandButton type = "submit" value="Add New User" action = "/admin/new_User.xhtml?faces-redirect=true" look="success" size="md"/>
 
 
 
@@ -23,25 +23,14 @@
                         <b:modal id="amodal2" title="Enter Information" styleClass="modalPseudoClass2"
                                  closable="false"  close-on-escape="false" backdrop="false">
 
-
-
                                 <b:inputText label="First name" />
                                 <b:inputText label="Last name"  />
-
-
-
-
-
-
-
 
                                 <b:inputText label="Zip code"  />
                                 <b:inputText label="City"  />
 
 
-                                <b:commandButton  name = "add" value="Create" icon="add"
-                                                  ajax="true"
-                                                 onclick = "ajax:car.add(car)">
+                                <b:commandButton  name = "add" value="Create" icon="plus-circle" ajax="true" onclick = "ajax:car.add(car)">
                                 </b:commandButton>
 
 
@@ -62,32 +51,40 @@
 
 
 
-                        <b:dataTable value="#{order.orderList}" var="car" class="editableCarTable">
-                            <b:dataTableColumn value="#{car.userName}" />
-                            <b:dataTableColumn value="#{car.email}" />
-                            <b:dataTableColumn value="#{car.user_id}" />
+                        <b:dataTable value="#{userBean.userList()}" var="u" class="editableCarTable" responsive="true">
+                            <b:dataTableColumn value="#{u.userName}" label = "User Name"/>
 
 
 
-                            <b:dataTableColumn>
-                                <b:commandButton name ="edit" value="edit" icon="edit" ajax="true" update="@(.editableCarTable)" onclick = "ajax:car.edit()">
 
-                                </b:commandButton>
-                            </b:dataTableColumn>
-                            <b:dataTableColumn>
-                                <b:commandButton name = "delete" value="delete user" look="danger" ajax="true" update="@(.editableCarTable)"
-                                                 onclick = "ajax:car.delete()">
-                                </b:commandButton>
+
+                            <b:dataTableColumn name = "Edit">
+                                <b:commandButton name ="edit" label = "Edit" value="edit" size = "sm" action = "/admin/update_User.xhtml?faces-redirect=true"/>
+
+
+
 
                             </b:dataTableColumn>
+                            <b:dataTableColumn>
+                                <b:commandButton name = "delete" label= "Delete Account" value="delete" look="danger" ajax="true" size = "sm"
+                                                  update="@(.editableCarTable)"
+                                                 onclick = "ajax:u.delete()">
+                                </b:commandButton>
+
+                            </b:dataTableColumn>
 
                             <b:dataTableColumn>
-                                <b:commandButton name = "deactivate" value="deactivate account" look="warning" ajax="true" update="@(.editableCarTable)"
-                                                 onclick = "ajax:car.deactivate()">
+                                <b:commandButton name = "deactivate" label = "Deactivate Account" size = "sm" value="deactivate" icon="fa-clock" look="warning"
+                                                 ajax="true" update="@(.editableCarTable)"
+                                                 onclick = "ajax:u.deactivate()">
                                 </b:commandButton>
 
                             </b:dataTableColumn>
                         </b:dataTable>
+
+
+
+
                     </h:form>
 
 
