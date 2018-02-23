@@ -14,22 +14,15 @@
                     <b:form>
 
 
-                                    <b:inputText label="First name" />
-                                    <b:inputText label="Last name"  />
+                                    <b:inputText id = "username" value = "#{userBean.userName}" label="User Name" />
+                                    <b:inputText id = "password" value = "#{userBean.password}" label="Password" />
 
 
 
 
 
 
-
-
-                                    <b:inputText label="Zip code"  />
-                                    <b:inputText label="City"  />
-
-
-                        <b:commandButton action = "new_User.xhtml" name = "add" value="Create" icon="add" ajax="true" update="@(.editableCarTable)"
-                                         onclick = "ajax:car.add(car)">
+                        <b:commandButton value="Save" action="#{userBean.saveStudentDetails(userBean)}" class="btn btn-success btnWidth">
                         </b:commandButton>
 
                     </b:form>

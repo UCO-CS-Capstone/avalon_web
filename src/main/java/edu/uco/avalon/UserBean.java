@@ -2,66 +2,82 @@ package edu.uco.avalon;
 
 
 
-import java.io.IOException;
+
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+
+
+
 import javax.sql.DataSource;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+
 import javax.inject.Named;
-import java.sql.SQLException;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-@Named(value = "userBean")
-@SessionScoped
+@Named
 public class UserBean implements Serializable{
 
+    private String userName;
+    private String password;
+    private int id;
 
-    private DataSource ds;
 
-    public ArrayList<User>userListDB;
+    public ArrayList<UserBean>userListDB;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
 
 
 
     @PostConstruct
     public void init() {
-        userListDB = DataBaseOps.getUsers();
+        userListDB = DataBase.getUserListDB();
     }
 
     /* Method Used To Fetch All Records From The Database */
-    public ArrayList<User> userList() {
+    public ArrayList<UserBean> userList() {
         return userListDB;
     }
 
     /* Method Used To Save New Student Record */
-    public String insertUsers(User newStudentObj) {
-        return DataBaseOps.insertUser(newStudentObj);
+    public String saveStudentDetails(UserBean user) throws SQLException {
+
+            return DataBase.saveStudentDetailsInDB(user);
     }
 
-    /* Method Used To Edit Student Record */
-    public String editUser(int studentId) {
-        return DataBaseOps.edit(studentId);
-    }
+
 
     /* Method Used To Update Student Record */
-    public String updateStudentDetails(User updateStudentObj) {
-        return DataBaseOps.updateUser(updateStudentObj);
+    public String updateStudentDetails(UserBean updateStudentObj) {
+        return DataBase.updateStudentDetailsInDB(updateStudentObj);
     }
 
     /* Method Used To Delete Student Record */
-    public String delete(int studentId) {
-        return DataBaseOps.deleteUser(studentId);
+    public String deleteStudentRecord(int studentId) {
+        return DataBase.deleteStudentRecordInDB(studentId);
     }
-
-
-
-
-
-
 
 }

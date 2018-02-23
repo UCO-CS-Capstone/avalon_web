@@ -12,9 +12,10 @@
                 <b:container>
 
         <h:form>
-            <b:button value="Add New User" look="success" onclick="$('.modalPseudoClass2').modal()" size="md"/>
 
 
+            <b:commandButton  name = "add" value="Add New User" icon="add" ajax="true" action="new_User.xhtml?faces-redirect=true" size="md">
+            </b:commandButton>
 
             </h:form>
 
@@ -62,9 +63,9 @@
 
 
 
-                        <b:dataTable value="#{order.orderList}" var="car" class="editableCarTable">
+                        <b:dataTable value="#{userBean.userList()}" var="car" class="editableCarTable">
                             <b:dataTableColumn value="#{car.userName}" />
-                            <b:dataTableColumn value="#{car.email}" />
+                            <b:dataTableColumn value="#{car.password}" />
                             <b:dataTableColumn value="#{car.user_id}" />
 
 
