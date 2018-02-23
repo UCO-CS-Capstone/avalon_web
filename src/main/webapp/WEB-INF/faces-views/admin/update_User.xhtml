@@ -1,11 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-<f:view>
-    <h:outputLabel value="Hello, world"/>
-</f:view>
-</html>
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<ui:composition template="/applayout/pageTemplate.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/applayout/pageTemplate.xhtml">
+        <ui:define name="content">
+            <h:body style="padding-top: 40px; background-color: #add;">
+                <b:container>
+
+                    <b:form>
+
+
+                        <b:inputText label="User Name" />
+                        <b:inputText label="User Type"  />
+                        <b:inputText label="Email"  />
+                        <b:inputText label="Age"  />
+
+
+                        <b:commandButton  name = "add" value="Save" icon="add"
+                                          ajax="true" update="@(.editableCarTable)"
+                                         onclick = "ajax:car.updateUser(car)">
+                        </b:commandButton>
+
+                    </b:form>
+                </b:container>
+            </h:body>
+
+
+        </ui:define>
+    </ui:composition>
+</ui:composition>
+
+
+
+
