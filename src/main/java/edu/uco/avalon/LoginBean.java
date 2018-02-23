@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 public class LoginBean implements Serializable {
 
     private int userID;
+
     private String firstName;
     private String lastName;
     private String email;
@@ -94,7 +95,7 @@ public class LoginBean implements Serializable {
             this.loggedIn = false;
 
             FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage("form", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Too many login attempts."));
+            fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Too many login attempts."));
             return "";
         }
         Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
@@ -102,7 +103,7 @@ public class LoginBean implements Serializable {
             throw new SQLException("conn is null.");
         }
         try {
-            Argon2 argon2 = Argon2Factory.create();
+            PasswordHash ph = new PasswordHash();
             String sql = "SELECT * FROM users WHERE email = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, this.email);
@@ -111,13 +112,14 @@ public class LoginBean implements Serializable {
             if (rs.next()) {
                 hashed = rs.getString("password");
 
-                if (argon2.verify(hashed, this.password)) {
+                if (ph.verify(hashed, this.password)) {
                     this.loggedIn = true;
 
                     this.userID = rs.getInt("userID");
                     this.firstName = rs.getString("first_name");
                     this.lastName = rs.getString("last_name");
-                    this.locked = rs.getBoolean("isLocked");
+                    this.email = rs.getString("email");
+                    this.password = "";
                 }
             }
         } finally {
@@ -126,9 +128,8 @@ public class LoginBean implements Serializable {
 
         if (!this.loggedIn) {
             FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage("form", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Invalid username or password."));
+            fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Invalid username or password."));
 
-            this.email = "";
             this.password = "";
             this.loggedIn = false;
             ++this.attempts;
@@ -136,6 +137,29 @@ public class LoginBean implements Serializable {
         } else {
             return "/dashboard?faces-redirect=true";
         }
+    }
+
+    public String register() throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        if (conn == null) {
+            throw new SQLException("conn is null.");
+        }
+        try {
+            PasswordHash ph = new PasswordHash();
+            String sql = "INSERT INTO users (first_name, last_name, email, password, lastUpdatedDate, lastUpdatedBy) values (?, ?, ?, ?, curdate(), ?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, this.firstName);
+            ps.setString(2, this.lastName);
+            ps.setString(3, this.email);
+            ps.setString(4, ph.hash(this.password));
+            ps.setInt(5, 0);
+            ps.execute();
+            this.loggedIn = true;
+            this.password = "";
+        } finally {
+            conn.close();
+        }
+        return "/dashboard";
     }
 
     public void logout() throws IOException {
