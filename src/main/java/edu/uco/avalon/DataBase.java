@@ -24,7 +24,7 @@ public class DataBase {
         return connObj;
     }
 
-    /* Method To Fetch The Student Records From Database */
+    /* Method To Fetch The User Records From Database */
     public static ArrayList<UserBean> getUserListDB() {
         ArrayList<UserBean> studentsList = new ArrayList<UserBean>();
         try {
@@ -45,7 +45,7 @@ public class DataBase {
         return studentsList;
     }
 
-    /* Method Used To Save New Student Record In Database */
+    /* Method Used To Save New User Record In Database */
     public static String saveStudentDetailsInDB(UserBean user) throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
         if (conn == null) {
@@ -67,7 +67,7 @@ public class DataBase {
         return null;
     }
 
-    /* Method Used To Update Student Record In Database */
+    /* Method Used To Update User Record In Database */
     public static String updateStudentDetailsInDB(UserBean updateStudentObj) {
         try {
             pstmt = getConnection().prepareStatement("update users set username=?, password=?," +
@@ -83,7 +83,7 @@ public class DataBase {
         return "/index.xhtml?faces-redirect=true";
     }
 
-    /* Method Used To Delete Student Record From Database */
+    /* Method Used To Delete User Record From Database */
     public static String deleteStudentRecordInDB(int studentId){
         System.out.println("deleteStudentRecordInDB() : Student Id: " + studentId);
         try {
