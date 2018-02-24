@@ -10,27 +10,42 @@
         <ui:define name="content">
             <b:container>
                 <b:column span="6" offset="3">
-                    <h:form>
+                    <h:form id="login">
                         <h1>Sign In</h1>
                         <hr/>
-                        <b:messages/>
-                        <b:inputText id="email" placeholder="Email address" value="#{loginBean.email}">
+
+                        <b:messages for="login"/>
+
+                        <b:inputText id="email" value="#{loginBean.email}" label="Email" required="true">
                             <f:facet name="prepend">
                                 <b:iconAwesome name="envelope" />
                             </f:facet>
                         </b:inputText>
-                        <b:inputText id="password" placeholder="Password" type="password" value="#{loginBean.password}">
+                        <b:message for="email" />
+
+                        <b:inputText id="password" type="password" value="#{loginBean.password}" label="Password" required="true">
                             <f:facet name="prepend">
                                 <b:iconAwesome name="key" />
                             </f:facet>
                         </b:inputText>
+                        <b:message for="password" />
+
                         <b:selectBooleanCheckbox value="true" caption="Remember Me"/>
-                        <b:column span="6">
-                            <b:commandButton action="#{loginBean.login}" look="primary btn-block" value="Sign In" iconAwesome="sign-in" size="md" iconAlign="right"/>
+
+                        <b:column span="12">
+                            <b:commandButton action="#{loginBean.login}" look="primary btn-block" colSm="6" value="Sign In" iconAwesome="sign-in"/>
+                            <b:dropButton value="Login Help" look="danger btn-block" colSm="6" iconAwesome="question-circle" update="@form" display="inline-block">
+                                <b:navLink disabled="true">
+                                    <b:iconAwesome name="key" styleClass="fa-fw"/>
+                                    Forgot Password
+                                </b:navLink>
+                                <b:navLink href="register">
+                                    <b:iconAwesome name="plus" styleClass="fa-fw"/>
+                                    Register
+                                </b:navLink>
+                            </b:dropButton>
                         </b:column>
-                        <b:column span="6">
-                            <b:commandButton value="Login Help" look="danger btn-block" iconAwesome="question-circle" size="md" iconAlign="right" update="@form" />
-                        </b:column>
+
                     </h:form>
                 </b:column>
             </b:container>
