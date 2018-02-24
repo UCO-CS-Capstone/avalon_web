@@ -2,11 +2,12 @@ package edu.uco.avalon;
 
 import java.time.LocalDateTime;
 
-public class Equipment {
+public class   Equipment {
 
     private int equipmentID;
     private String name;
     private String type;
+    private int typeID;
     private LocalDateTime lastUpdatedDate;
     private String lastUpdatedBy;
     private boolean isDeleted;
@@ -58,4 +59,8 @@ public class Equipment {
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }
+
+    public int getTypeID() { return typeID; }
+
+    public void setTypeID(int typeID) { this.typeID = typeID; }
 }

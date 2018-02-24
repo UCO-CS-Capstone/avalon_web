@@ -17,7 +17,7 @@ public class EquipmentRepository {
         List<Equipment> equipmentList = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM equipments";
+            String query = "SELECT * FROM equipments eq JOIN lu_equipment_types let ON eq.typeID = let.typeID";
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
@@ -25,7 +25,8 @@ public class EquipmentRepository {
                 Equipment equipment = new Equipment();
                 equipment.setEquipmentID(rs.getInt("equipmentID"));
                 equipment.setName(rs.getString("name"));
-                equipment.setType(rs.getString("type"));
+                equipment.setType(rs.getString("description"));
+                equipment.setTypeID(rs.getInt("typeID"));
                 equipment.setLastUpdatedDate(rs.getTimestamp("lastUpdatedDate").toLocalDateTime());
                 equipment.setLastUpdatedBy(rs.getString("lastUpdatedBy"));
                 equipment.setDeleted(rs.getBoolean("isDeleted"));
@@ -47,7 +48,7 @@ public class EquipmentRepository {
         Equipment equipment = new Equipment();
 
         try {
-            String query = "SELECT * FROM equipments WHERE equipmentID=?";
+            String query = "SELECT * FROM equipments eq JOIN lu_equipment_types let ON eq.typeID = let.typeID WHERE equipmentID=?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, equipmentID);
             ResultSet rs = ps.executeQuery();
@@ -55,7 +56,8 @@ public class EquipmentRepository {
             if (rs.next()) {
                 equipment.setEquipmentID(rs.getInt("equipmentID"));
                 equipment.setName(rs.getString("name"));
-                equipment.setType(rs.getString("type"));
+                equipment.setType(rs.getString("description"));
+                equipment.setTypeID(rs.getInt("typeID"));
                 equipment.setLastUpdatedDate(rs.getTimestamp("lastUpdatedDate").toLocalDateTime());
                 equipment.setLastUpdatedBy(rs.getString("lastUpdatedBy"));
                 equipment.setDeleted(rs.getBoolean("isDeleted"));
@@ -74,12 +76,14 @@ public class EquipmentRepository {
         }
 
         try {
-            String query = "INSERT INTO equipment(name, type, lastUpdatedDate, lastUpdatedBy) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO equipments(name, typeID, lastUpdatedDate, lastUpdatedBy) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, equipment.getName());
-            ps.setString(2, equipment.getType());
+            //ps.setString(2, equipment.getType());
+            ps.setInt(2,equipment.getTypeID());
             ps.setTimestamp(3, Timestamp.valueOf(equipment.getLastUpdatedDate()));
             ps.setString(4, equipment.getLastUpdatedBy());
+            ps.executeUpdate();
         } finally {
             conn.close();
         }
@@ -92,10 +96,11 @@ public class EquipmentRepository {
         }
 
         try {
-            String query = "UPDATE equipments SET name=?, type=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE equipmentID=?";
+            String query = "UPDATE equipments SET name=?, typeID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE equipmentID=?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, equipment.getName());
-            ps.setString(2, equipment.getType());
+            //ps.setString(2, equipment.getType());
+            ps.setInt(2,equipment.getTypeID());
             ps.setTimestamp(3, Timestamp.valueOf(equipment.getLastUpdatedDate()));
             ps.setString(4, equipment.getLastUpdatedBy());
             ps.setInt(5, equipment.getEquipmentID());
