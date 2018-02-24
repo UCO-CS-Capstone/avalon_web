@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<ui:composition template="/applayout/pageTemplate.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/applayout/pageTemplate.xhtml">
+        <ui:define name="content">
+            <h1>Allocation</h1>
+            <hr/>
+            <h:form>
+                <b:dataTable value="#{allocationBean.allocationList}" var="allocation" fixedHeader="true"
+                             scroll-size="400px"
+                             scroll-x="false"
+                             responsive="true">
+                    <b:dataTableColumn value="#{allocation.displayForEquipmentID}" label="Equipment Name" order="asc" />
+                    <b:dataTableColumn value="#{allocation.displayForProjectID}" label="Project Name" />
+                    <b:dataTableColumn label="" orderable="false">
+                        <b:commandButton look="primary" value="Deallocate" iconAwesome="minus" rendered="#{allocation.projectID != 0}"
+                                         onclick="if (!confirm('Are you sure you want to deallocate the current equipment?')) return false"
+                                         action="#{allocationBean.removeAllocation(allocation.allocationID)}" />
+                    </b:dataTableColumn>
+                </b:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</ui:composition>
