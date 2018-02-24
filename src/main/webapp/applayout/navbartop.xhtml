@@ -1,16 +1,14 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:fragment xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:ui="http://java.sun.com/jsf/facelets"
-  xmlns:f="http://java.sun.com/jsf/core"
-  xmlns:b="http://bootsfaces.net/ui">
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:b="http://bootsfaces.net/ui">
 
-  <ui:remove>
-    <!--
-	    	Hint to editors: The menus follow the Chicago style of capitalization. Please capitalize everything but the "smaller" words. 
-	     -->
-  </ui:remove>
+    <ui:remove>
+        <!-- Hint to editors: The menus follow the Chicago style of capitalization. Please capitalize everything but the "smaller" words. -->
+    </ui:remove>
     <h:form>
         <b:navBar brand="Avalon"
                   brandHref="/" inverse="true"
@@ -25,7 +23,10 @@
                         <b:navLink outcome="/equipment/index" value="Equipment" iconAwesome="truck"/>
                         <b:navLink outcome="/allocation" value="Allocation" iconAwesome="suitcase" />
                         <b:navLink outcome="/admin/index" value="Admin" iconAwesome="wrench" />
-                        <b:navLink outcome="/schedule/index" value="Schedule" iconAwesome="adjust"/>
+                        <b:dropMenu value="Schedule" iconAwesome="calendar">
+                            <b:navLink outcome="/schedule/index" value="ScheduleD" />
+                            <b:navLink outcome="/sechdule/index" value="ScheduleP" />
+                        </b:dropMenu>
                     </b:navbarLinks>
                     <!--<b:dropMenu value="Examples">-->
                         <!--<b:navLink value="Starter Template" outcome="/starter_template" icon="play-circle" />-->
