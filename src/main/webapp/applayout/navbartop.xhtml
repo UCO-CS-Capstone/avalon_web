@@ -13,7 +13,7 @@
   </ui:remove>
     <h:form>
         <b:navBar brand="Avalon"
-                  brandHref="https://avalon.gabe565.com/" inverse="true"
+                  brandHref="/" inverse="true"
                   fixed="top">
             <b:container>
                 <b:navbarLinks>
@@ -23,6 +23,7 @@
                         <b:navLink outcome="#{loginBean.loggedIn ? '/dashboard' : '/index'}" value="Home" iconAwesome="home" />
                         <b:navLink outcome="/project/index" value="Project" iconAwesome="folder" />
                         <b:navLink outcome="/equipment/index" value="Equipment" iconAwesome="truck"/>
+                        <b:navLink outcome="/allocation" value="Allocation" iconAwesome="suitcase" />
                         <b:navLink outcome="/admin/index" value="Admin" iconAwesome="wrench" />
                         <b:navLink outcome="/schedule/index" value="Schedule" iconAwesome="adjust"/>
                     </b:navbarLinks>

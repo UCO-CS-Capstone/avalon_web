@@ -5,9 +5,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -26,6 +24,10 @@ public class ProjectBean implements Serializable {
     private String estCostOverall;
     private String currentCost;
 
+    private List<Allocation> allocatedList;
+    private List<Allocation> unallocatedList;
+    private int[] selectedAllocation;
+
     @PostConstruct
     public void init() {
         try {
@@ -43,6 +45,22 @@ public class ProjectBean implements Serializable {
         return projectList;
     }
 
+    public List<Allocation> getAllocatedList() {
+        return allocatedList;
+    }
+
+    public List<Allocation> getUnallocatedList() {
+        return unallocatedList;
+    }
+
+    public int[] getSelectedAllocation() {
+        return selectedAllocation;
+    }
+
+    public void setSelectedAllocation(int[] selectedAllocation) {
+        this.selectedAllocation = selectedAllocation;
+    }
+
     public String beforeCreate() {
         this.projectID = 0;
         this.name = null;
@@ -57,12 +75,9 @@ public class ProjectBean implements Serializable {
     public String createProject() throws Exception {
         Project newProject = new Project();
         newProject.setName(this.name);
-        if (this.startDate != null)
-            newProject.setStartDate(new java.sql.Date(this.startDate.getTime()).toLocalDate());
-        if (this.estEndDate != null)
-            newProject.setEstEndDate(new java.sql.Date(this.estEndDate.getTime()).toLocalDate());
-        if (this.actEndDate != null)
-            newProject.setActEndDate(new java.sql.Date(this.actEndDate.getTime()).toLocalDate());
+        if (this.startDate != null) newProject.setStartDate(new java.sql.Date(this.startDate.getTime()).toLocalDate());
+        if (this.estEndDate != null) newProject.setEstEndDate(new java.sql.Date(this.estEndDate.getTime()).toLocalDate());
+        if (this.actEndDate != null) newProject.setActEndDate(new java.sql.Date(this.actEndDate.getTime()).toLocalDate());
         newProject.setCurrentCost(Helpers.parse(this.currentCost, Locale.US));
         newProject.setEstCostOverall(Helpers.parse(this.estCostOverall, Locale.US));
         newProject.setLastUpdatedDate(LocalDateTime.now());
@@ -73,22 +88,51 @@ public class ProjectBean implements Serializable {
         return "/project/index";
     }
 
+    public String projectDetail(int projectID) throws Exception {
+        Project project = ProjectRepository.readOneProject(projectID);
+        this.projectID = project.getProjectID();
+        this.name = project.getName();
+        this.startDate = (project.getStartDate() != null) ? java.sql.Date.valueOf(project.getStartDate()) : null;
+        this.estEndDate = (project.getEstEndDate() != null) ? java.sql.Date.valueOf(project.getEstEndDate()) : null;
+        this.actEndDate = (project.getActEndDate() != null) ? java.sql.Date.valueOf(project.getActEndDate()) : null;
+        this.estCostOverall = (project.getEstCostOverall() != null) ? "$" + String.format("%,.2f", project.getEstCostOverall()) : null;
+        this.currentCost = (project.getCurrentCost() != null) ? "$" + String.format("%,.2f", project.getCurrentCost()) : null;
+        allocatedList = AllocationRepository.readAllAllocation().stream().filter(x -> !x.isDeleted() && x.getProjectID() == projectID).collect(Collectors.toList());
+        unallocatedList = AllocationRepository.readAllAllocation().stream().filter(x -> !x.isDeleted() && x.getProjectID() == 0).collect(Collectors.toList());
+        unallocatedList.sort(Comparator.comparing(Allocation::getDisplayForEquipmentID));
+
+        return "/project/detail";
+    }
+
+    public void addAllocation() throws Exception {
+        Allocation allocation = new Allocation();
+        allocation.setProjectID(this.projectID);
+        allocation.setLastUpdatedDate(LocalDateTime.now());
+        allocation.setLastUpdatedBy("user");
+        AllocationRepository.addAllocation(selectedAllocation, allocation);
+        allocatedList = AllocationRepository.readAllAllocation().stream().filter(x -> !x.isDeleted() && x.getProjectID() == projectID).collect(Collectors.toList());
+        unallocatedList = AllocationRepository.readAllAllocation().stream().filter(x -> !x.isDeleted() && x.getProjectID() == 0).collect(Collectors.toList());
+        unallocatedList.sort(Comparator.comparing(Allocation::getDisplayForEquipmentID));
+    }
+
+    public void removeAllocation(int allocationID) throws Exception {
+        int[] removedAllocation = { allocationID };
+        Allocation allocation = new Allocation();
+        allocation.setLastUpdatedDate(LocalDateTime.now());
+        allocation.setLastUpdatedBy("user");
+        AllocationRepository.removeAllocationByAllocationID(removedAllocation, allocation);
+        allocatedList = AllocationRepository.readAllAllocation().stream().filter(x -> !x.isDeleted() && x.getProjectID() == projectID).collect(Collectors.toList());
+        unallocatedList = AllocationRepository.readAllAllocation().stream().filter(x -> !x.isDeleted() && x.getProjectID() == 0).collect(Collectors.toList());
+        unallocatedList.sort(Comparator.comparing(Allocation::getDisplayForEquipmentID));
+    }
+
     public String beforeEditing(int projectID) throws Exception {
         Project project = ProjectRepository.readOneProject(projectID);
         this.projectID = project.getProjectID();
         this.name = project.getName();
-        if (project.getStartDate() != null)
-            this.startDate = java.sql.Date.valueOf(project.getStartDate());
-        else
-            this.startDate = null;
-        if (project.getEstEndDate() != null)
-            this.estEndDate = java.sql.Date.valueOf(project.getEstEndDate());
-        else
-            this.estEndDate = null;
-        if (project.getActEndDate() != null)
-           this.actEndDate = java.sql.Date.valueOf(project.getActEndDate());
-        else
-            this.actEndDate = null;
+        this.startDate = (project.getStartDate() != null) ? java.sql.Date.valueOf(project.getStartDate()) : null;
+        this.estEndDate = (project.getEstEndDate() != null) ? java.sql.Date.valueOf(project.getEstEndDate()) : null;
+        this.actEndDate = (project.getActEndDate() != null) ? java.sql.Date.valueOf(project.getActEndDate()) : null;
         this.estCostOverall = String.valueOf(project.getEstCostOverall());
         this.currentCost = String.valueOf(project.getCurrentCost());
         return "/project/edit";
@@ -98,12 +142,9 @@ public class ProjectBean implements Serializable {
         Project oldProject = new Project();
         oldProject.setProjectID(this.projectID);
         oldProject.setName(this.name);
-        if (this.startDate != null)
-            oldProject.setStartDate(new java.sql.Date(this.startDate.getTime()).toLocalDate());
-        if (this.estEndDate != null)
-            oldProject.setEstEndDate(new java.sql.Date(this.estEndDate.getTime()).toLocalDate());
-        if (this.actEndDate != null)
-            oldProject.setActEndDate(new java.sql.Date(this.actEndDate.getTime()).toLocalDate());
+        if (this.startDate != null) oldProject.setStartDate(new java.sql.Date(this.startDate.getTime()).toLocalDate());
+        if (this.estEndDate != null) oldProject.setEstEndDate(new java.sql.Date(this.estEndDate.getTime()).toLocalDate());
+        if (this.actEndDate != null) oldProject.setActEndDate(new java.sql.Date(this.actEndDate.getTime()).toLocalDate());
         oldProject.setEstCostOverall(Helpers.parse(this.estCostOverall, Locale.US));
         oldProject.setCurrentCost(Helpers.parse(this.currentCost, Locale.US));
         oldProject.setLastUpdatedDate(LocalDateTime.now());
@@ -114,7 +155,12 @@ public class ProjectBean implements Serializable {
     }
 
     public void deleteProject(int projectID) throws Exception {
-        ProjectRepository.deleteProject(projectID);
+        Project project = new Project();
+        project.setProjectID(projectID);
+        project.setLastUpdatedDate(LocalDateTime.now());
+        project.setLastUpdatedBy("user");
+        AllocationRepository.removeAllocationByProject(project);
+        ProjectRepository.deleteProject(project);
         projectList = ProjectRepository.readAllProject().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
     }
 
