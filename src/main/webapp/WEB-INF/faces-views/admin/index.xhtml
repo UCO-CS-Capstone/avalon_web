@@ -13,11 +13,10 @@
 
         <h:form>
 
+            <b:button  iconAwesome="user-plus" name = "add" value="Add New User"  onclick="$('.modalPseudoClass2').modal()" size="md"/>
 
-            <b:commandButton  name = "add" value="Add New User" icon="add" ajax="true" action="new_User.xhtml?faces-redirect=true" size="md">
-            </b:commandButton>
 
-            </h:form>
+        </h:form>
 
 
                     <h:form id="myFormID">
@@ -26,25 +25,42 @@
 
 
 
-                                <b:inputText label="First name" />
-                                <b:inputText label="Last name"  />
+                            <b:inputText required="true" id = "username" value = "#{userBean.userName}" label="User Name" />
+                            <b:inputText required="true" id = "password" value = "#{userBean.password}" label="Password" />
+                            <b:inputText required="true" id = "flagID" value = "#{userBean.flagID}" label="Flag (1-4)" />
+                            <b:inputText required="true" id = "lastUpdated" value = "#{userBean.lastUpdatedBy}" label="Last Updated By" />
+
+                            <b:commandButton value="Create" update="@(.editableCarTable)"
+                                             action="#{userBean.saveStudentDetails(userBean)}"
+                                             onclick = "/index.xhtml?faces-redirect=true"
+                                             outcome="/admin/index"
+                                             class="btn btn-success btnWidth">
+                            </b:commandButton>
+
+                            <f:facet name="footer">
+                                <b:button value="Close" dismiss="modal" />
+                                <b:button value="Ok" look="primary" dismiss="modal" />
+                            </f:facet>
+                        </b:modal>
+                    </h:form>
+
+                    <h:form id="myFormID2">
+                        <b:modal id="amodal2" title="Update Information" styleClass="modalPseudoClass3"
+                                 closable="false"  close-on-escape="false" backdrop="false">
 
 
 
+                            <b:inputText required="true" id = "username" value = "#{userBean.userName}" label="User Name" />
+                            <b:inputText required="true" id = "password" value = "#{userBean.password}" label="Password" />
+                            <b:inputText required="true" id = "flagID" value = "#{userBean.flagID}" label="Flag (1-4)" />
+                            <b:inputText required="true" id = "lastUpdated" value = "#{userBean.lastUpdatedBy}" label="Last Updated By" />
 
-
-
-
-
-                                <b:inputText label="Zip code"  />
-                                <b:inputText label="City"  />
-
-
-                                <b:commandButton  name = "add" value="Create" icon="add"
-                                                  ajax="true"
-                                                 onclick = "ajax:car.add(car)">
-                                </b:commandButton>
-
+                            <b:commandButton value="Update" update="@(.editableCarTable)"
+                                             action="#{userBean.updateUser(userBean)}"
+                                             onclick = "/index.xhtml?faces-redirect=true"
+                                             outcome="/admin/index"
+                                             class="btn btn-success btnWidth">
+                            </b:commandButton>
 
                             <f:facet name="footer">
                                 <b:button value="Close" dismiss="modal" />
@@ -59,32 +75,43 @@
 
 
 
+
                     <h:form>
 
 
 
-                        <b:dataTable value="#{userBean.userList()}" var="car" class="editableCarTable">
-                            <b:dataTableColumn value="#{car.userName}" />
-                            <b:dataTableColumn value="#{car.password}" />
-                            <b:dataTableColumn value="#{car.user_id}" />
-
+                        <b:dataTable value="#{userBean.userList()}" var="u" class="editableCarTable">
+                            <b:dataTableColumn style="text-align: center" value="#{u.userName}" label = "User Name" />
+                            <b:dataTableColumn style="text-align: center" value="#{u.password}" label = "Password"/>
+                            <b:dataTableColumn style="text-align: center" value="#{u.lastUpdatedDate}" label = "Last Updated Date"/>
+                            <b:dataTableColumn style="text-align: center" value="#{u.flagID}" label = "Flag ID"/>
+                            <b:dataTableColumn style="text-align: center" value="#{u.lastUpdatedBy}" label = "Last Updated By"/>
+                            <b:dataTableColumn style="text-align: center" value="#{u.userID}" label = "ID"/>
 
 
                             <b:dataTableColumn>
-                                <b:commandButton name ="edit" value="edit" icon="edit" ajax="true" update="@(.editableCarTable)" onclick = "ajax:car.edit()">
+                                <b:button
 
-                                </b:commandButton>
+                                        label = "Edit User" style="text-align: center"
+                                        float="center"  size="sm"
+                                        onclick="$('.modalPseudoClass3').modal()"
+                                        name ="edit" value="edit" icon="edit" ajax="true" update="@(.editableCarTable)" >
+
+                                </b:button>
                             </b:dataTableColumn>
                             <b:dataTableColumn>
-                                <b:commandButton name = "delete" value="delete user" look="danger" ajax="true" update="@(.editableCarTable)"
-                                                 onclick = "ajax:car.delete()">
+                                <b:commandButton label = "Delete User" value="Delete" look="danger" size="sm" ajax ="true"
+                                                 float="center"  iconAwesome="trash" update="@(.editableCarTable)"
+                                                 action="#{userBean.deleteUserRecord(u.userID)}"
+                                                 class="btn btn-success btnWidth">
                                 </b:commandButton>
-
                             </b:dataTableColumn>
 
                             <b:dataTableColumn>
-                                <b:commandButton name = "deactivate" value="deactivate account" look="warning" ajax="true" update="@(.editableCarTable)"
-                                                 onclick = "ajax:car.deactivate()">
+                                <b:commandButton label = "Deactivate Account" iconAwesome="user-times" name = "deactivate" size="sm"
+                                                 float="center"  value="deactivate" look="warning" ajax="true"
+                                                 update="@(.editableCarTable)"
+                                                 action = "ajax:car.deactivate()">
                                 </b:commandButton>
 
                             </b:dataTableColumn>

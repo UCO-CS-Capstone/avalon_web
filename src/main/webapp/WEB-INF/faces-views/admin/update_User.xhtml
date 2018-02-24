@@ -14,16 +14,17 @@
                     <b:form>
 
 
-                        <b:inputText label="User Name" />
-                        <b:inputText label="User Type"  />
-                        <b:inputText label="Email"  />
-                        <b:inputText label="Age"  />
+                        <b:inputText id = "username" value = "#{userBean.userName}" label="User Name" />
+                        <b:inputText id = "password" value = "#{userBean.password}" label="Password" />
+                        <b:inputText id = "flagID" value = "#{userBean.flagID}" label="Flag" />
+                        <b:inputText id = "lastUpdated" value = "#{userBean.lastUpdatedBy}" label="Last Updated By" />
 
-
-                        <b:commandButton  name = "add" value="Save" icon="add"
-                                          ajax="true" update="@(.editableCarTable)"
-                                         onclick = "ajax:car.updateUser(car)">
+                        <b:commandButton value="Update" update="@(.editableCarTable)"
+                                         action="#{userBean.updateUser(userBean)}"
+                                         onclick = "/index?faces-redirect=true"
+                                         class="btn btn-success btnWidth">
                         </b:commandButton>
+                        <b:commandLink id="cancelButton" outcome="/admin/index" iconAwesome="ban" value="Cancel" look="danger" style="display: inline; margin-left: 10px;" />
 
                     </b:form>
                 </b:container>

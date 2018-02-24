@@ -1,29 +1,35 @@
 package edu.uco.avalon;
 
 
-
-
+import java.time.LocalDateTime;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 
-
-import javax.sql.DataSource;
 import javax.annotation.PostConstruct;
 
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 
 @Named
+@RequestScoped
 public class UserBean implements Serializable{
 
     private String userName;
     private String password;
-    private int id;
+    private int userID;
+    private int flagID;
+    private LocalDateTime lastUpdatedDate;
+    private String lastUpdatedBy;
 
 
-    public ArrayList<UserBean>userListDB;
+    private ArrayList<UserBean>userListDB;
 
     public String getUserName() {
         return userName;
@@ -33,9 +39,16 @@ public class UserBean implements Serializable{
         return password;
     }
 
-    public int getId() {
-        return id;
+    public int getUserID() {
+        return userID;
     }
+
+    public int getFlagID(){return flagID;}
+
+   public LocalDateTime getLastUpdatedDate(){return lastUpdatedDate;}
+
+    public String getLastUpdatedBy(){return lastUpdatedBy;}
+
 
 
 
@@ -45,17 +58,33 @@ public class UserBean implements Serializable{
     public void setPassword(String password) {
         this.password = password;
     }
-    public void setId(int id) {
-        this.id = id;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
+
+    public void setLastUpdatedDate(LocalDateTime lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+    public void setFlagID(int flagID) {
+        this.flagID = flagID;
+    }
+    public void setLastUpdatedBy(String lastUpdatedBy){this.lastUpdatedBy = lastUpdatedBy;}
+
+
+
+
 
 
 
 
     @PostConstruct
-    public void init() {
-        userListDB = DataBase.getUserListDB();
-    }
+    public void init() throws SQLException {
+
+            userListDB = DataBase.allUsers();
+
+        }
+
+
 
     /* Method Used To Fetch All Records From The Database */
     public ArrayList<UserBean> userList() {
@@ -63,21 +92,27 @@ public class UserBean implements Serializable{
     }
 
     /* Method Used To Save New Student Record */
-    public String saveStudentDetails(UserBean user) throws SQLException {
+    public void saveStudentDetails(UserBean user) throws SQLException {
 
-            return DataBase.saveStudentDetailsInDB(user);
+            DataBase.saveStudentDetailsInDB(user);
+        userListDB = DataBase.allUsers();
     }
 
 
 
     /* Method Used To Update Student Record */
-    public String updateStudentDetails(UserBean updateStudentObj) {
-        return DataBase.updateStudentDetailsInDB(updateStudentObj);
+    public void updateUser(UserBean user) throws SQLException{
+        DataBase.update(user);
+        userListDB = DataBase.allUsers();
     }
 
-    /* Method Used To Delete Student Record */
-    public String deleteStudentRecord(int studentId) {
-        return DataBase.deleteStudentRecordInDB(studentId);
+
+
+    public void deleteUserRecord(int id) throws SQLException {
+        DataBase.deleteUser(id);
+        userListDB = DataBase.allUsers();
     }
+
+
 
 }

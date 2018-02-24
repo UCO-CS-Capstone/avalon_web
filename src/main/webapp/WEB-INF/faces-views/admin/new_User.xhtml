@@ -16,14 +16,22 @@
 
                                     <b:inputText id = "username" value = "#{userBean.userName}" label="User Name" />
                                     <b:inputText id = "password" value = "#{userBean.password}" label="Password" />
+                                    <b:inputText id = "flagID" value = "#{userBean.flagID}" label="Flag (1-5)" />
+                                    <b:inputText id = "lastUpdated" value = "#{userBean.lastUpdatedBy}" label="Last Updated By" />
 
 
 
 
 
-
-                        <b:commandButton value="Save" action="#{userBean.saveStudentDetails(userBean)}" class="btn btn-success btnWidth">
+                        <b:commandButton value="Save" update="@(.editableCarTable)"
+                                         action="#{userBean.saveStudentDetails(userBean)}"
+                                         onclick = "/index.xhtml?faces-redirect=true"
+                                         outcome="/admin/index"
+                                         class="btn btn-success btnWidth">
                         </b:commandButton>
+                        <b:commandLink id="cancelButton" outcome="/admin/index"
+                                       iconAwesome="ban" value="Cancel" look="danger"
+                                       style="display: inline; margin-left: 10px;" />
 
                     </b:form>
                 </b:container>
