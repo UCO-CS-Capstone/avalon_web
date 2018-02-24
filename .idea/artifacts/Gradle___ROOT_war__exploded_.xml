@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="Gradle : ROOT.war (exploded)">
+  <artifact type="exploded-war" build-on-make="true" name="Gradle : ROOT.war (exploded)">
     <output-path>$PROJECT_DIR$/build/libs/exploded/ROOT.war</output-path>
     <properties id="gradle-properties">
       <options external-project-path="$PROJECT_DIR$">

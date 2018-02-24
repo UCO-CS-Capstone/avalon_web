@@ -21,18 +21,11 @@ public class EquipmentBean implements Serializable {
     private int equipmentID;
     private String name;
     private String type;
+    private int typeID;
 
     @PostConstruct
     public void init() {
         try {
-
-            equipmentTypes = new ArrayList<>();
-            equipmentTypes.add("(Please Select");
-            equipmentTypes.add("Type1");
-            equipmentTypes.add("Type2");
-            equipmentTypes.add("Type3");
-            equipmentTypes.add("Type4");
-
             Class.forName("org.mariadb.jdbc.Driver");
             equipmentList = EquipmentRepository.readAllEquipment().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
         } catch (Exception ex) {
@@ -48,13 +41,15 @@ public class EquipmentBean implements Serializable {
         this.equipmentID = 0;
         this.name = null;
         this.type = null;
+        this.typeID = 0;
         return "/equipment/create";
     }
 
     public String createEquipment() throws Exception{
         Equipment newEquipment = new Equipment();
         newEquipment.setName(this.name);
-        newEquipment.setType(this.type);
+        //newEquipment.setType(this.type);
+        newEquipment.setTypeID(this.typeID);
         newEquipment.setLastUpdatedBy("user");
         newEquipment.setLastUpdatedDate(LocalDateTime.now());
         EquipmentRepository.createEquipment(newEquipment);
@@ -62,11 +57,12 @@ public class EquipmentBean implements Serializable {
         return "/equipment/index";
     }
 
-    public String beforeEdit(int equipmentID) throws Exception{
+    public String beforeEditing(int equipmentID) throws Exception{
         Equipment equipment = EquipmentRepository.readOneEquipment(equipmentID);
         this.equipmentID = equipment.getEquipmentID();
         this.name = equipment.getName();
         this.type = equipment.getType();
+        this.typeID = equipment.getTypeID();
         return "/equipment/edit";
     }
 
@@ -75,6 +71,7 @@ public class EquipmentBean implements Serializable {
         oldEquipment.setEquipmentID(this.equipmentID);
         oldEquipment.setName(this.name);
         oldEquipment.setType(this.type);
+        oldEquipment.setTypeID(this.typeID);
         oldEquipment.setLastUpdatedDate(LocalDateTime.now());
         oldEquipment.setLastUpdatedBy("user");
         EquipmentRepository.updateEquipment(oldEquipment);
@@ -108,4 +105,7 @@ public class EquipmentBean implements Serializable {
         return equipmentTypes;
     }
 
+    public int getTypeID() { return typeID; }
+
+    public void setTypeID(int typeID) { this.typeID = typeID; }
 }
