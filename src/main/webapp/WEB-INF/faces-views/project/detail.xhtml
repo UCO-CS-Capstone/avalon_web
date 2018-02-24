@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<ui:composition template="/applayout/pageTemplate.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/applayout/pageTemplate.xhtml">
+        <ui:define name="content">
+            <h1>Project Detail</h1>
+            <hr/>
+            <b:form>
+                <b:container fluid="true" style="font-size: large">
+                    <b:row>
+                        <b:column col-md="4">
+                            <strong>Name</strong>
+                        </b:column>
+                        <b:column col-md="8">
+                            #{projectBean.name}
+                        </b:column>
+                    </b:row>
+                    <b:row>
+                        <b:column col-md="4">
+                            <strong>Start Date</strong>
+                        </b:column>
+                        <b:column col-md="8">
+                            #{projectBean.startDate}
+                        </b:column>
+                    </b:row>
+                    <b:row>
+                        <b:column col-md="4">
+                            <strong>Estimated End Date</strong>
+                        </b:column>
+                        <b:column col-md="8">
+                            #{projectBean.estEndDate}
+                        </b:column>
+                    </b:row>
+                    <b:row>
+                        <b:column col-md="4">
+                            <strong>Actual End Date</strong>
+                        </b:column>
+                        <b:column col-md="8">
+                            #{projectBean.actEndDate}
+                        </b:column>
+                    </b:row>
+                    <b:row>
+                        <b:column col-md="4">
+                            <strong>Estimated Cost Overall</strong>
+                        </b:column>
+                        <b:column col-md="8">
+                            #{projectBean.estCostOverall}
+                        </b:column>
+                    </b:row>
+                    <b:row>
+                        <b:column col-md="4">
+                            <strong>Current Cost</strong>
+                        </b:column>
+                        <b:column col-md="8">
+                            #{projectBean.currentCost}
+                        </b:column>
+                    </b:row>
+                    <b:row>
+                        <b:column col-md="4">
+                            <strong>Allocate Equipment(s)</strong>
+                        </b:column>
+                        <b:column col-md="4">
+                            <h:selectManyListbox id="test" value="#{projectBean.selectedAllocation}" styleClass="form-control">
+                                <f:selectItems value="#{projectBean.unallocatedList}" var="unallocated"
+                                               itemLabel="#{unallocated.displayForEquipmentID}"
+                                               itemValue="#{unallocated.equipmentID}" />
+                            </h:selectManyListbox>
+                        </b:column>
+                        <b:column col-md="4">
+                            <b:commandButton look="success" value="Allocate" iconAwesome="plus" action="#{projectBean.addAllocation}" />
+                        </b:column>
+                    </b:row>
+                    <b:row>
+                        <b:column col-md="6">
+                            <b:dataTable value="#{projectBean.allocatedList}" var="allocated" fixedHeader="true"
+                                         scroll-size="400px"
+                                         scroll-x="false"
+                                         responsive="true" searching="false" paginated="false">
+                                <b:dataTableColumn value="#{allocated.displayForEquipmentID}" label="Equipment Name" order="asc" />
+                                <b:dataTableColumn label="" orderable="false">
+                                    <b:commandButton look="primary" value="Deallocate" iconAwesome="minus" rendered="#{allocated.projectID != 0}"
+                                                     onclick="if (!confirm('Are you sure you want to deallocate the current equipment?')) return false"
+                                                     action="#{projectBean.removeAllocation(allocated.allocationID)}" />
+                                </b:dataTableColumn>
+                            </b:dataTable>
+                        </b:column>
+                        <b:column col-md="6"/>
+                    </b:row>
+                </b:container>
+                <br/>
+                <b:commandLink id="backButton" outcome="/project/index" iconAwesome="arrow-left" value="Back"
+                               look="primary" style="display: inline;" />
+            </b:form>
+        </ui:define>
+    </ui:composition>
+</ui:composition>

@@ -1,5 +1,6 @@
 package edu.uco.avalon;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -10,8 +11,8 @@ public class Project {
     private LocalDate startDate;
     private LocalDate estEndDate;
     private LocalDate actEndDate;
-    private double estCostOverall;
-    private double currentCost;
+    private BigDecimal estCostOverall;
+    private BigDecimal currentCost;
     private LocalDateTime lastUpdatedDate;
     private String lastUpdatedBy;
     private boolean isDeleted;
@@ -56,19 +57,19 @@ public class Project {
         this.actEndDate = actEndDate;
     }
 
-    public double getEstCostOverall() {
+    public BigDecimal getEstCostOverall() {
         return estCostOverall;
     }
 
-    public void setEstCostOverall(double estCostOverall) {
+    public void setEstCostOverall(BigDecimal estCostOverall) {
         this.estCostOverall = estCostOverall;
     }
 
-    public double getCurrentCost() {
+    public BigDecimal getCurrentCost() {
         return currentCost;
     }
 
-    public void setCurrentCost(double currentCost) {
+    public void setCurrentCost(BigDecimal currentCost) {
         this.currentCost = currentCost;
     }
 

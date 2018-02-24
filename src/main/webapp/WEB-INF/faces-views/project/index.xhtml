@@ -11,15 +11,28 @@
             <h1>Project List</h1>
             <hr/>
             <h:form>
-                <b:dataTable value="#{projectBean.projectList}" var="project">
+                <b:dataTable value="#{projectBean.projectList}" var="project" fixedHeader="true"
+                             scroll-size="400px"
+                             scroll-x="false"
+                             responsive="true">
                     <b:dataTableColumn value="#{project.name}" order="asc" />
                     <b:dataTableColumn value="#{project.startDate}" label="Start Date" />
                     <b:dataTableColumn value="#{project.estEndDate}" label="Estimated End Date" />
                     <b:dataTableColumn value="#{project.actEndDate}" label="Actual End Date" />
-                    <b:dataTableColumn value="#{project.estCostOverall}" label="Estimated Cost Overall" />
-                    <b:dataTableColumn value="#{project.currentCost}" label="Current Cost" />
+                    <b:dataTableColumn label="Estimated Cost Overall">
+                            <h:outputText value="#{project.estCostOverall}">
+                                <f:convertNumber type="currency" currencySymbol="$" />
+                            </h:outputText>
+                    </b:dataTableColumn>
+                    <b:dataTableColumn label="Current Cost">
+                        <h:outputText value="#{project.currentCost}">
+                            <f:convertNumber type="currency" currencySymbol="$" />
+                        </h:outputText>
+                    </b:dataTableColumn>
                     <b:dataTableColumn label="" orderable="false">
-                        <b:commandButton look="info" value="Edit" iconAwesome="pencil-square-o" action="#{projectBean.beforeEditing(project.projectID)}" />
+                        <b:commandButton look="info" value="Detail" iconAwesome="info-circle" action="#{projectBean.projectDetail(project.projectID)}" />
+                        <b:commandButton look="info" value="Edit" iconAwesome="pencil-square-o"
+                                         action="#{projectBean.beforeEditing(project.projectID)}" style="margin-left: 10px;" />
                         <b:commandButton look="primary" value="Delete" iconAwesome="trash" style="margin-left: 10px;"
                                        onclick="if (!confirm('Are you sure you want to delete the current project?')) return false"
                                        action="#{projectBean.deleteProject(project.projectID)}" />
