@@ -24,7 +24,8 @@
                                  closable="false"  close-on-escape="false" backdrop="false">
 
 
-
+                            <b:inputText required="true" id = "first_name" value = "#{userBean.first}" label="First Name" />
+                            <b:inputText required="true" id = "last_last" value = "#{userBean.last}" label="Last Name" />
                             <b:inputText required="true" id = "email" value = "#{userBean.email}" label="User Name" />
                             <b:inputText required="true" id = "password" value = "#{userBean.password}" label="Password" />
                             <b:inputText required="true" id = "flagID" value = "#{userBean.flagID}" label="Flag (1-4)" />
@@ -49,8 +50,9 @@
                                  closable="false"  close-on-escape="false" backdrop="false">
 
 
-
-                            <b:inputText required="true" id = "email" value = "#{userBean.email}" label="User Name" />
+                            <b:inputText required="true" id = "first_name" value = "#{userBean.first}" label="First Name" />
+                            <b:inputText required="true" id = "last_name" value = "#{userBean.last}" label="Last Name" />
+                            <b:inputText required="true" id = "email" value = "#{userBean.email}" label="Email" />
                             <b:inputText required="true" id = "password" value = "#{userBean.password}" label="Password" />
                             <b:inputText required="true" id = "flagID" value = "#{userBean.flagID}" label="Flag (1-4)" />
                             <b:inputText required="true" id = "lastUpdated" value = "#{userBean.lastUpdatedBy}" label="Last Updated By" />
@@ -80,7 +82,9 @@
 
 
 
-                        <b:dataTable value="#{userBean.userList()}" var="u" class="editableCarTable">
+                        <b:dataTable value="#{userBean.userList()}" var="u" class="editableCarTable" responsive="true">
+                            <b:dataTableColumn style="text-align: center" value="#{u.first}" label = "First Name" />
+                            <b:dataTableColumn style="text-align: center" value="#{u.last}" label = "Last Name"/>
                             <b:dataTableColumn style="text-align: center" value="#{u.email}" label = "Email" />
                             <b:dataTableColumn style="text-align: center" value="#{u.password}" label = "Password"/>
                             <b:dataTableColumn style="text-align: center" value="#{u.lastUpdatedDate}" label = "Last Updated Date"/>
@@ -102,7 +106,7 @@
                             <b:dataTableColumn>
                                 <b:commandButton label = "Delete User" value="Delete" look="danger" size="sm" ajax ="true"
                                                  float="center"  iconAwesome="trash" update="@(.editableCarTable)"
-                                                 action="#{userBean.deleteUserRecord(userBean)}"
+                                                 action="#{userBean.deleteUserRecord(u.userID)}"
                                                  class="btn btn-success btnWidth">
                                 </b:commandButton>
                             </b:dataTableColumn>
