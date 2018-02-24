@@ -1,11 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-<f:view>
-    <h:outputLabel value="Hello, world"/>
-</f:view>
-</html>
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<ui:composition template="/applayout/pageTemplate.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/applayout/pageTemplate.xhtml">
+        <ui:define name="content">
+            <h:body style="padding-top: 40px; background-color: #add;">
+                <b:container>
+
+                    <b:form>
+
+
+                        <b:inputText id = "username" value = "#{userBean.userName}" label="User Name" />
+                        <b:inputText id = "password" value = "#{userBean.password}" label="Password" />
+                        <b:inputText id = "flagID" value = "#{userBean.flagID}" label="Flag" />
+                        <b:inputText id = "lastUpdated" value = "#{userBean.lastUpdatedBy}" label="Last Updated By" />
+
+                        <b:commandButton value="Update" update="@(.editableCarTable)"
+                                         action="#{userBean.updateUser(userBean)}"
+                                         onclick = "/index?faces-redirect=true"
+                                         class="btn btn-success btnWidth">
+                        </b:commandButton>
+                        <b:commandLink id="cancelButton" outcome="/admin/index" iconAwesome="ban" value="Cancel" look="danger" style="display: inline; margin-left: 10px;" />
+
+                    </b:form>
+                </b:container>
+            </h:body>
+
+
+        </ui:define>
+    </ui:composition>
+</ui:composition>
+
+
+
+
