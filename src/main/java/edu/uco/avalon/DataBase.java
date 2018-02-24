@@ -22,7 +22,7 @@ public class DataBase {
             while (rs.next()) {
                 UserBean user = new UserBean();
                 user.setUserID(rs.getInt("userID"));
-                user.setUserName(rs.getString("userName"));
+                user.setEmail(rs.getString("emai"));
                 user.setPassword(rs.getString("password"));
                 user.setFlagID(rs.getInt("flagID"));
                 user.setLastUpdatedDate(rs.getTimestamp("lastUpdatedDate").toLocalDateTime());
@@ -50,10 +50,10 @@ public class DataBase {
         }
 
         try {
-            String query = "INSERT INTO users(userName, password,flagID, lastUpdatedDate,lastUpdatedBy)" +
+            String query = "INSERT INTO users(email, password,flagID, lastUpdatedDate,lastUpdatedBy)" +
                     " values (?, ?, ?, ?,?)";
             PreparedStatement ps = conn.prepareStatement(query);
-            ps.setString(1, user.getUserName());
+            ps.setString(1, user.getEmail());
             ps.setString(2, user.getPassword());
             ps.setInt(3, user.getFlagID());
             ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
@@ -76,11 +76,11 @@ public class DataBase {
         }
 
         try {
-            String query = "UPDATE users SET username=?, password=?, flagID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE userID=?";
+            String query = "UPDATE users SET email=?, password=?, flagID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE userID=?";
 
             PreparedStatement ps = conn.prepareStatement(query);
 
-            ps.setString(1, user.getUserName());
+            ps.setString(1, user.getEmail());
             ps.setString(2, user.getPassword());
             ps.setInt(3, user.getFlagID());
             ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
@@ -96,15 +96,15 @@ public class DataBase {
 
 
 
-    public static void deleteUser(int user) throws SQLException {
+    public static void deleteUser(UserBean user) throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
         if (conn == null) {
             throw new SQLException("conn is null");
         }
         try {
-            String query = "delete from users WHERE userID=" + user;
+            String query = "delete from users WHERE userID=?";
             PreparedStatement ps = conn.prepareStatement(query);
-
+            ps.setInt(1, user.getUserID());
             ps.executeUpdate();
         } finally {
             conn.close();
