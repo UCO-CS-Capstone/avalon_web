@@ -21,6 +21,9 @@ import javax.inject.Named;
 @RequestScoped
 public class UserBean implements Serializable{
 
+
+    private String first;
+    private String last;
     private String email;
     private String password;
     private int userID;
@@ -30,6 +33,15 @@ public class UserBean implements Serializable{
 
 
     private ArrayList<UserBean>userListDB;
+
+    public String getFirst() {
+        return first;
+    }
+    public String getLast() {
+        return last;
+    }
+
+
 
     public String getEmail() {
         return email;
@@ -51,8 +63,14 @@ public class UserBean implements Serializable{
 
 
 
+    public void setFirst(String first) {
+        this.first = first;
+    }
+    public void setLast(String last) {
+        this.last = last;
+    }
 
-    public void setEmail(String userName) {
+    public void setEmail(String email) {
         this.email = email;
     }
     public void setPassword(String password) {
@@ -108,7 +126,7 @@ public class UserBean implements Serializable{
 
 
 
-    public void deleteUserRecord(UserBean id) throws SQLException {
+    public void deleteUserRecord(int id) throws SQLException {
         DataBase.deleteUser(id);
         userListDB = DataBase.allUsers();
     }
