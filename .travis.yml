@@ -15,6 +15,6 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/build/libs/ROOT.war git@$server:$destination_file
+  script: rsync -r --delete-after --quiet --inplace $TRAVIS_BUILD_DIR/build/libs/ROOT.war git@$server:$destination_file
   on:
     branch: master
