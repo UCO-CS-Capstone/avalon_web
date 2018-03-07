@@ -1,18 +1,20 @@
 language: java
 dist: trusty
 sudo: false
-jdk:
-  - oraclejdk8
+jdk: openjdk8
 
 addons:
-  ssh_known_hosts:
-    $server
+  ssh_known_hosts: avalon.gabe565.com
 
-before_install:
-  - 'openssl aes-256-cbc -K $encrypted_84a533ea9a4b_key -iv $encrypted_84a533ea9a4b_iv -in .travis/id_rsa.enc -out .travis/id_rsa -d'
+before_deploy:
+  - openssl aes-256-cbc -K $encrypted_84a533ea9a4b_key -iv $encrypted_84a533ea9a4b_iv -in .travis/id_rsa.enc -out /tmp/id_rsa -d
+  - eval "$(ssh-agent -s)"
+  - chmod 600 /tmp/id_rsa
+  - ssh-add /tmp/id_rsa
 
 deploy:
   provider: script
-  script: .travis/deploy.sh
+  skip_cleanup: true
+  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/build/libs/ROOT.war git@$server:$destination_file
   on:
     branch: master
