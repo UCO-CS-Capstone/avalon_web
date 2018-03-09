@@ -14,13 +14,11 @@
             <h5>After saving, the new equipment will be avaible to add to a project</h5><br/>
             <b:form>
                 <b:inputText id ="name" value ="#{equipmentBean.name}" required="true" label="Unique Equipment Name:"/>
-                <!--<b:selectOneMenu value="#{equipmentBean.type}" required="true" label="Equipment Type:"/>
-                    <f:selectItems value="#{equipmentBean.equipmentTypes}" var = "typeVar" itemLabel="#{typeVar}" itemValue="#{typeVar}"/>-->
-                <!--<b:selectOneMenu value="#{equipmentTypeBean.selectedEquipmentTypeValue}" label="Equipment Type:">
-                    <f:selectItems value="#{equipmentTypeBean.equipmentTypesList}" />
-                </b:selectOneMenu>-->
+                <b:selectOneMenu value="#{equipmentBean.selectedEquipmentTypeValue}" label="Equipment Type:">
+                    <f:selectItems value="#{equipmentBean.equipmentTypesList}" />
+                </b:selectOneMenu>
 
-                <b:inputText id="type" value ="#{equipmentBean.typeID}" required="true" label="Equipment Type:"/>
+                <!--<b:inputText id="type" value ="#{equipmentBean.typeID}" required="true" label="Equipment Type:"/>-->
 
                 <b:commandButton id="createButton" action="#{equipmentBean.createEquipment}" iconAwesome="plus" value="Create Equipment" look="primary" />
                 <b:commandLink id="cancelButton" outcome="/equipment/index" iconAwesome="ban" value="Cancel" look="danger" style="display: inline; margin-left: 10px;" />

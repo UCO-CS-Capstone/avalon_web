@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RequestScoped
 public class EquipmentTypeBean implements Serializable {
 
-    private Map<String, Integer> equipmentTypesList;
+   /* private Map<String, Integer> equipmentTypesList;
     private Integer selectedEquipmentTypeValue;
 
     @PostConstruct
@@ -73,6 +73,6 @@ public class EquipmentTypeBean implements Serializable {
 
         return equipmentTypesList;
 
-    }
+    }*/
 
 }
