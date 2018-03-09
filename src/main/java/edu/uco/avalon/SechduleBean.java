@@ -67,9 +67,6 @@ public class SechduleBean implements Serializable {
         }
     }
 
-    public void edit() {
-
-    }
 
     public void beforeEdit(Sechdule schedule) {
         this.edit = true;
