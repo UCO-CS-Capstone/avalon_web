@@ -31,9 +31,13 @@
                     </b:dataTableColumn>
                     <b:dataTableColumn label="" orderable="false">
                         <b:commandButton look="info" value="Detail" iconAwesome="info-circle" action="#{projectBean.projectDetail(project.projectID)}" />
+                    </b:dataTableColumn>
+                    <b:dataTableColumn label="" orderable="false">
                         <b:commandButton look="info" value="Edit" iconAwesome="pencil-square-o"
-                                         action="#{projectBean.beforeEditing(project.projectID)}" style="margin-left: 10px;" />
-                        <b:commandButton look="primary" value="Delete" iconAwesome="trash" style="margin-left: 10px;"
+                                         action="#{projectBean.beforeEditing(project.projectID)}" />
+                    </b:dataTableColumn>
+                    <b:dataTableColumn label="" orderable="false">
+                        <b:commandButton look="primary" value="Delete" iconAwesome="trash"
                                        onclick="if (!confirm('Are you sure you want to delete the current project?')) return false"
                                        action="#{projectBean.deleteProject(project.projectID)}" />
                     </b:dataTableColumn>

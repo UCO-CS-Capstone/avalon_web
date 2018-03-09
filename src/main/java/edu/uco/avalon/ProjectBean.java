@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Level;
@@ -27,6 +28,17 @@ public class ProjectBean implements Serializable {
     private List<Allocation> allocatedList;
     private List<Allocation> unallocatedList;
     private int[] selectedAllocation;
+
+    private void filterListByNextMaintenanceDate(List<Allocation> unallocatedList) throws SQLException {
+        for (int i = unallocatedList.size()-1; i >= 0; i--) {
+            LocalDateTime dateToCompare = MaintenanceRepository.getLatestNextMaintenanceDateForEquipment(unallocatedList.get(i).getEquipmentID());
+            if (dateToCompare == null) {}
+            else if (dateToCompare.isAfter(LocalDateTime.now())) {}
+            else {
+                unallocatedList.remove(i);
+            }
+        }
+    }
 
     @PostConstruct
     public void init() {
@@ -99,6 +111,7 @@ public class ProjectBean implements Serializable {
         this.currentCost = (project.getCurrentCost() != null) ? "$" + String.format("%,.2f", project.getCurrentCost()) : null;
         allocatedList = AllocationRepository.readAllAllocation().stream().filter(x -> !x.isDeleted() && x.getProjectID() == projectID).collect(Collectors.toList());
         unallocatedList = AllocationRepository.readAllAllocation().stream().filter(x -> !x.isDeleted() && x.getProjectID() == 0).collect(Collectors.toList());
+        filterListByNextMaintenanceDate(unallocatedList);
         unallocatedList.sort(Comparator.comparing(Allocation::getDisplayForEquipmentID));
 
         return "/project/detail";
@@ -112,6 +125,7 @@ public class ProjectBean implements Serializable {
         AllocationRepository.addAllocation(selectedAllocation, allocation);
         allocatedList = AllocationRepository.readAllAllocation().stream().filter(x -> !x.isDeleted() && x.getProjectID() == projectID).collect(Collectors.toList());
         unallocatedList = AllocationRepository.readAllAllocation().stream().filter(x -> !x.isDeleted() && x.getProjectID() == 0).collect(Collectors.toList());
+        filterListByNextMaintenanceDate(unallocatedList);
         unallocatedList.sort(Comparator.comparing(Allocation::getDisplayForEquipmentID));
     }
 
@@ -123,6 +137,7 @@ public class ProjectBean implements Serializable {
         AllocationRepository.removeAllocationByAllocationID(removedAllocation, allocation);
         allocatedList = AllocationRepository.readAllAllocation().stream().filter(x -> !x.isDeleted() && x.getProjectID() == projectID).collect(Collectors.toList());
         unallocatedList = AllocationRepository.readAllAllocation().stream().filter(x -> !x.isDeleted() && x.getProjectID() == 0).collect(Collectors.toList());
+        filterListByNextMaintenanceDate(unallocatedList);
         unallocatedList.sort(Comparator.comparing(Allocation::getDisplayForEquipmentID));
     }
 

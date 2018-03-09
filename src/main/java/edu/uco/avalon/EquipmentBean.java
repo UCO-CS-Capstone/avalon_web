@@ -5,8 +5,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -23,6 +22,14 @@ public class EquipmentBean implements Serializable {
     private String type;
     private int typeID;
 
+    // Viet was here
+    private List<Maintenance> maintenanceList;
+    private int maintenanceID;
+    private String description;
+    private String cost;
+    private Date nextMaintenanceDate;
+    private boolean isEditingMaintenance;
+
     @PostConstruct
     public void init() {
         try {
@@ -35,6 +42,20 @@ public class EquipmentBean implements Serializable {
 
     public List<Equipment> getEquipmentList() {
         return equipmentList;
+    }
+
+    public List<Maintenance> getMaintenanceList() { return  maintenanceList; }
+
+    public boolean isEditingMaintenance() {
+        return isEditingMaintenance;
+    }
+
+    public void prepareEditingMaintenance(Maintenance maintenance) {
+        this.maintenanceID = maintenance.getMaintenanceID();
+        this.description = maintenance.getDescription();
+        this.cost = String.valueOf(maintenance.getCost());
+        this.nextMaintenanceDate = java.sql.Timestamp.valueOf(maintenance.getNextMaintenanceDate());
+        this.isEditingMaintenance = true;
     }
 
     public String beforeCreate() {
@@ -52,9 +73,77 @@ public class EquipmentBean implements Serializable {
         newEquipment.setTypeID(this.typeID);
         newEquipment.setLastUpdatedBy("user");
         newEquipment.setLastUpdatedDate(LocalDateTime.now());
-        EquipmentRepository.createEquipment(newEquipment);
+        int generatedID = EquipmentRepository.createEquipment(newEquipment);
+        // Viet was here
+        Allocation allocation = new Allocation();
+        allocation.setEquipmentID(generatedID);
+        allocation.setLastUpdatedDate(LocalDateTime.now());
+        allocation.setLastUpdatedBy("user");
+        AllocationRepository.createAllocation(allocation);
         equipmentList = EquipmentRepository.readAllEquipment().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
         return "/equipment/index";
+    }
+
+    public String equipmentDetail(int equipmentID) throws Exception {
+        Equipment equipment = EquipmentRepository.readOneEquipment(equipmentID);
+        this.equipmentID = equipment.getEquipmentID();
+        this.name = equipment.getName();
+        this.type = equipment.getType();
+        this.typeID = equipment.getTypeID();
+        this.description = null;
+        this.cost = null;
+        this.nextMaintenanceDate = null;
+        this.isEditingMaintenance = false;
+        maintenanceList = MaintenanceRepository.readAllMaintenance().stream().filter(x -> !x.isDeleted() && x.getEquipmentID() == equipmentID).collect(Collectors.toList());
+        return "/equipment/detail";
+    }
+
+    public void createMaintenance() throws Exception {
+        Maintenance maintenance = new Maintenance();
+        maintenance.setEquipmentID(this.equipmentID);
+        maintenance.setDescription(this.description);
+        maintenance.setCost(Helpers.parse(this.cost, Locale.US));
+        maintenance.setNextMaintenanceDate(new java.sql.Timestamp(this.nextMaintenanceDate.getTime()).toLocalDateTime());
+        maintenance.setLastUpdatedDate(LocalDateTime.now());
+        maintenance.setLastUpdatedBy("user");
+        MaintenanceRepository.createMaintenance(maintenance);
+        this.description = null;
+        this.cost = null;
+        this.nextMaintenanceDate = null;
+        maintenanceList = MaintenanceRepository.readAllMaintenance().stream().filter(x -> !x.isDeleted() && x.getEquipmentID() == equipmentID).collect(Collectors.toList());
+    }
+
+    public void editMaintenance() throws Exception {
+        Maintenance maintenance = new Maintenance();
+        maintenance.setMaintenanceID(this.maintenanceID);
+        maintenance.setEquipmentID(this.equipmentID);
+        maintenance.setDescription(this.description);
+        maintenance.setCost(Helpers.parse(this.cost, Locale.US));
+        maintenance.setNextMaintenanceDate(new java.sql.Timestamp(this.nextMaintenanceDate.getTime()).toLocalDateTime());
+        maintenance.setLastUpdatedDate(LocalDateTime.now());
+        maintenance.setLastUpdatedBy("user");
+        MaintenanceRepository.updateMaintenance(maintenance);
+        this.description = null;
+        this.cost = null;
+        this.nextMaintenanceDate = null;
+        this.isEditingMaintenance = false;
+        maintenanceList = MaintenanceRepository.readAllMaintenance().stream().filter(x -> !x.isDeleted() && x.getEquipmentID() == equipmentID).collect(Collectors.toList());
+    }
+
+    public void cancelEditMaintenance() {
+        this.description = null;
+        this.cost = null;
+        this.nextMaintenanceDate = null;
+        this.isEditingMaintenance = false;
+    }
+
+    public void deleteMaintenance(int maintenanceID) throws Exception {
+        Maintenance maintenance= new Maintenance();
+        maintenance.setMaintenanceID(maintenanceID);
+        maintenance.setLastUpdatedDate(LocalDateTime.now());
+        maintenance.setLastUpdatedBy("user");
+        MaintenanceRepository.deleteMaintenanceByMaintenanceID(maintenance);
+        maintenanceList = MaintenanceRepository.readAllMaintenance().stream().filter(x -> !x.isDeleted() && x.getEquipmentID() == equipmentID).collect(Collectors.toList());
     }
 
     public String beforeEditing(int equipmentID) throws Exception{
@@ -80,9 +169,20 @@ public class EquipmentBean implements Serializable {
     }
 
     public void deleteEquipment(int equipmentID) throws Exception{
+        // Viet was here
+        System.out.println(equipmentID);
+        Allocation allocation = new Allocation();
+        allocation.setAllocationID(AllocationRepository.readOneAllocationByEquipmentID(equipmentID).getAllocationID());
+        allocation.setLastUpdatedDate(LocalDateTime.now());
+        allocation.setLastUpdatedBy("user");
+        AllocationRepository.deleteAllocation(allocation);
+        Maintenance maintenance = new Maintenance();
+        maintenance.setEquipmentID(equipmentID);
+        maintenance.setLastUpdatedDate(LocalDateTime.now());
+        maintenance.setLastUpdatedBy("user");
+        MaintenanceRepository.deleteMaintenanceByEquipmentID(maintenance);
         EquipmentRepository.deleteEquipment(equipmentID);
         equipmentList = EquipmentRepository.readAllEquipment().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
-
     }
 
     public String getName() {
@@ -108,4 +208,29 @@ public class EquipmentBean implements Serializable {
     public int getTypeID() { return typeID; }
 
     public void setTypeID(int typeID) { this.typeID = typeID; }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCost() {
+        return cost;
+    }
+
+    public void setCost(String cost) {
+        this.cost = cost;
+    }
+
+    public Date getNextMaintenanceDate() {
+        return nextMaintenanceDate;
+    }
+
+    public void setNextMaintenanceDate(Date nextMaintenanceDate) {
+        this.nextMaintenanceDate = nextMaintenanceDate;
+    }
+
 }

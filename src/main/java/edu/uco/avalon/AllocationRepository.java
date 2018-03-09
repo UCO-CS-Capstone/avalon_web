@@ -48,6 +48,47 @@ public class AllocationRepository {
 
     }
 
+    public static Allocation readOneAllocationByEquipmentID(int equipmentID) throws SQLException {
+
+//        if (ds == null) {
+//            throw new SQLException("ds is null.");
+//        }
+//        Connection conn = ds.getConnection();
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        if (conn == null) {
+            throw new SQLException("conn is null.");
+        }
+
+        Allocation allocation = new Allocation();
+
+        try {
+            String query = "SELECT * FROM allocations " +
+                    "JOIN (equipments) ON (allocations.equipmentID = equipments.equipmentID) " +
+                    "LEFT JOIN (projects) ON (allocations.projectID = projects.projectID) " +
+                    "WHERE allocations.equipmentID=?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, equipmentID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                allocation.setAllocationID(rs.getInt("allocations.allocationID"));
+                allocation.setEquipmentID(rs.getInt("allocations.equipmentID"));
+                allocation.setDisplayForEquipmentID(rs.getString("equipments.name"));
+                allocation.setProjectID(rs.getInt("allocations.projectID"));
+                allocation.setDisplayForProjectID(rs.getString("projects.name"));
+                allocation.setLastUpdatedDate(rs.getTimestamp("allocations.lastUpdatedDate").toLocalDateTime());
+                allocation.setLastUpdatedBy(rs.getString("allocations.lastUpdatedBy"));
+                allocation.setDeleted(rs.getBoolean("allocations.isDeleted"));
+            }
+        }
+        finally {
+            conn.close();
+        }
+
+        return allocation;
+
+    }
+    
     public static void addAllocation(int[] selectedAllocation, Allocation allocation) throws SQLException {
 
 //        if (ds == null) {
