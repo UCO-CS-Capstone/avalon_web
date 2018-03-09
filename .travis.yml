@@ -23,8 +23,6 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script: 
-    - rsync -q --inplace "$TRAVIS_BUILD_DIR/build/libs/ROOT.war" "git@$server:$destination_file"
-    - cat "$TRAVIS_BUILD_DIR/src/sql/avalon_db.sql" | ssh "$server" "mysql -uroot -p$db_pass"
+  script: bash "$TRAVIS_BUILD_DIR/.travis/deploy.sh"
   on:
     branch: master
