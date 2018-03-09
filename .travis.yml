@@ -2,27 +2,27 @@ language: java
 dist: trusty
 sudo: false
 jdk: openjdk8
-
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
 addons:
   ssh_known_hosts: avalon.gabe565.com
-
 before_deploy:
-  - openssl aes-256-cbc -K $encrypted_84a533ea9a4b_key -iv $encrypted_84a533ea9a4b_iv -in .travis/id_rsa.enc -out /tmp/id_rsa -d
-  - eval "$(ssh-agent -s)"
-  - chmod 600 /tmp/id_rsa
-  - ssh-add /tmp/id_rsa
-
+- openssl aes-256-cbc -K $encrypted_84a533ea9a4b_key -iv $encrypted_84a533ea9a4b_iv
+  -in .travis/id_rsa.enc -out /tmp/id_rsa -d
+- eval "$(ssh-agent -s)"
+- chmod 600 /tmp/id_rsa
+- ssh-add /tmp/id_rsa
 deploy:
   provider: script
   skip_cleanup: true
   script: bash "$TRAVIS_BUILD_DIR/.travis/deploy.sh"
   on:
     branch: master
+notifications:
+  slack:
+    secure: ULUWHLWLcCjAKGTYPN0OXtMxpUFobt1fbIZMWOHiWp+b5BksFfZNdcmkTWfuD+zP8YKukyLteHh1eqGhW7ueJxdoKYBqFjSrDNCtEt34u3giitkfKLfJJLODIiprUrt/tH1/es0Bp1MqcdMwsKCZTR3BN4+WdvJlhTEjHDtgg46rhnEAKA3mzNvd1IPtSYzAMtTT8K3pV5pRq+sEQkqOP8TTwGXyT4VMWRIFgstzc77VBAK5dxJyICfzQPlMQXIvKOJfoP40yGsUw1XUKFOf2qC8pi2iw6Y6EkdWMrG18uIhf2hbj0zPX/eribgyQeqSfTK6fcv8aj7e3foT7IECDwPUtmQIwB6E36zeon+DJmnlzLIwhIWWzz8BlKZgTxzEKMCe0b4kMSBppZqENBZsE2NJ2Immtd+Bwb9+/6zQHdnr+D/AM0TSf5jgDPMFWs6NHT8dzankn+Vg5d+4tvkd75vDSoFgoT/Ettp0oNBlsLJrgvFxceZISnJ9eAHp91/730HcCcuYsqGKXo9394k28ZXPco+mqj7GtQI+flOFz3eP5pVW7b39mYt/PXaDofQRJqxExKl6DsAFU7YONq23nWT4pr3MAhZrZUP3TDzD/88Tbmg2/ieWrvPyR3KyyqX2u4DRY2Ym6HawqHt51QI159/rtsQte6OijQp6j2eAVUE=
