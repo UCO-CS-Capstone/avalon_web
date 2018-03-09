@@ -21,7 +21,7 @@ public class AuthBean implements Serializable {
     @PostConstruct
     public void init() {
         String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        List publicList = Arrays.asList("/index.xhtml", "/register.xhtml");
+        List publicList = Arrays.asList("/index.xhtml", "/register.xhtml", "/contact.xhtml");
         currentPageAllowed = (publicList.contains(viewId) || loginBean.isLoggedIn());
     }
 

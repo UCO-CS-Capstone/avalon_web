@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<ui:composition template="/applayout/pageTemplate.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/applayout/pageTemplate.xhtml">
+        <ui:define name="content">
+            <b:container>
+                <b:column span="6" offset="3">
+                    <h:form>
+                        <h1>Contact Us</h1>
+                        <hr/>
+
+                        <b:inputText id="name" label="Name" value="#{contactBean.name}" required="true">
+                            <f:facet name="prepend">
+                                <b:iconAwesome name="user" />
+                            </f:facet>
+                        </b:inputText>
+                        <b:message for="@previous"/>
+
+                        <b:inputText id="email" label="Email address" value="#{contactBean.email}" required="true">
+                            <f:facet name="prepend">
+                                <b:iconAwesome name="envelope" />
+                            </f:facet>
+                        </b:inputText>
+                        <b:message for="@previous"/>
+
+                        <b:inputTextarea id="message" label="Message" value="#{contactBean.message}" required="true" style="min-height: 100px; resize: vertical">
+                            <f:facet name="prepend">
+                                <b:iconAwesome name="comment" />
+                            </f:facet>
+                        </b:inputTextarea>
+                        <b:message for="@previous"/>
+
+                        <b:column span="6" offset="3">
+                            <b:commandButton action="#{contactBean.submit}" look="primary btn-block" value="Submit" iconAwesome="paper-plane"/>
+                        </b:column>
+                    </h:form>
+                </b:column>
+            </b:container>
+        </ui:define>
+    </ui:composition>
+</ui:composition>
