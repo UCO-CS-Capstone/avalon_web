@@ -97,7 +97,7 @@ public class LoginBean implements Serializable {
             loggedIn = false;
 
             FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Too many login attempts. Please contact the administrator at (555) 867-5309 or clock on \"Contact\" in the footer."));
+            fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Too many login attempts. Please contact the administrator at (555) 867-5309 or click on \"Contact\" in the footer."));
             try {
                 String sql = "UPDATE users SET flagID = 1 WHERE email = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -110,7 +110,7 @@ public class LoginBean implements Serializable {
         }
         try {
             PasswordHash ph = PasswordHash.getInstance();
-            String sql = "SELECT * FROM users WHERE email = ? AND NOT flagID IN (1, 2)";
+            String sql = "SELECT * FROM users WHERE email = ?  AND flagID IS NULL";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, this.email);
             ResultSet rs = ps.executeQuery();
