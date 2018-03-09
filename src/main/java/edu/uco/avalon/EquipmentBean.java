@@ -4,7 +4,17 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.DriverManager;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +26,8 @@ import java.util.stream.Collectors;
 public class EquipmentBean implements Serializable {
 
     private List<Equipment> equipmentList;
-    private List<String> equipmentTypes;
+    private Map<String, Integer> equipmentTypesList;
+    private Integer selectedEquipmentTypeValue;
     private int equipmentID;
     private String name;
     private String type;
@@ -35,6 +46,10 @@ public class EquipmentBean implements Serializable {
         try {
             Class.forName("org.mariadb.jdbc.Driver");
             equipmentList = EquipmentRepository.readAllEquipment().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
+            equipmentTypesList = readAllEquipmentTypes().entrySet().stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                            (oldValue, newValue) -> oldValue, LinkedHashMap::new));
         } catch (Exception ex) {
             Logger.getLogger(EquipmentBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -70,7 +85,7 @@ public class EquipmentBean implements Serializable {
         Equipment newEquipment = new Equipment();
         newEquipment.setName(this.name);
         //newEquipment.setType(this.type);
-        newEquipment.setTypeID(this.typeID);
+        newEquipment.setTypeID(this.selectedEquipmentTypeValue);
         newEquipment.setLastUpdatedBy("user");
         newEquipment.setLastUpdatedDate(LocalDateTime.now());
         int generatedID = EquipmentRepository.createEquipment(newEquipment);
@@ -152,6 +167,7 @@ public class EquipmentBean implements Serializable {
         this.name = equipment.getName();
         this.type = equipment.getType();
         this.typeID = equipment.getTypeID();
+        this.selectedEquipmentTypeValue  = equipment.getTypeID();
         return "/equipment/edit";
     }
 
@@ -160,7 +176,7 @@ public class EquipmentBean implements Serializable {
         oldEquipment.setEquipmentID(this.equipmentID);
         oldEquipment.setName(this.name);
         oldEquipment.setType(this.type);
-        oldEquipment.setTypeID(this.typeID);
+        oldEquipment.setTypeID(this.selectedEquipmentTypeValue);
         oldEquipment.setLastUpdatedDate(LocalDateTime.now());
         oldEquipment.setLastUpdatedBy("user");
         EquipmentRepository.updateEquipment(oldEquipment);
@@ -185,6 +201,29 @@ public class EquipmentBean implements Serializable {
         equipmentList = EquipmentRepository.readAllEquipment().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
     }
 
+    public static Map<String, Integer> readAllEquipmentTypes() throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        if (conn == null) {
+            throw new SQLException("conn is null");
+        }
+
+        Map<String, Integer> equipmentTypesList = new LinkedHashMap<>();
+
+        try {
+            String query = "SELECT * FROM lu_equipment_types";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                equipmentTypesList.put(rs.getString("description"), rs.getInt("typeID"));
+            }
+        } finally {
+            conn.close();
+        }
+
+        return equipmentTypesList;
+
+    }
     public String getName() {
         return name;
     }
@@ -201,13 +240,25 @@ public class EquipmentBean implements Serializable {
         this.type = type;
     }
 
-    public List<String> getEquipmentTypes() {
-        return equipmentTypes;
+    public int getTypeID() {
+        return typeID;
     }
 
-    public int getTypeID() { return typeID; }
+    public void setTypeID(int typeID) {
+        this.typeID = typeID;
+    }
 
-    public void setTypeID(int typeID) { this.typeID = typeID; }
+    public Map<String, Integer> getEquipmentTypesList() {
+        return equipmentTypesList;
+    }
+
+    public Integer getSelectedEquipmentTypeValue() {
+        return selectedEquipmentTypeValue;
+    }
+
+    public void setSelectedEquipmentTypeValue(Integer selectedEquipmentTypeValue) {
+        this.selectedEquipmentTypeValue = selectedEquipmentTypeValue;
+    }
 
     public String getDescription() {
         return description;
