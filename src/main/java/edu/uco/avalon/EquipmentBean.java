@@ -254,8 +254,6 @@ public class EquipmentBean implements Serializable {
     public void setSelectedEquipmentTypeValue(Integer selectedEquipmentTypeValue) {
         this.selectedEquipmentTypeValue = selectedEquipmentTypeValue;
     }
-  
-    public void setTypeID(int typeID) { this.typeID = typeID; }
 
     public String getDescription() {
         return description;
