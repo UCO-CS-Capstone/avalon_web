@@ -25,6 +25,6 @@ deploy:
   skip_cleanup: true
   script: 
     - rsync -q --inplace "$TRAVIS_BUILD_DIR/build/libs/ROOT.war" "git@$server:$destination_file"
-    - cat "$TRAVIS_BUILD_DIR/src/sql/avalon_db.sql" | ssh "$server" "mysql -u root -p $db_pass"
+    - cat "$TRAVIS_BUILD_DIR/src/sql/avalon_db.sql" | ssh "$server" "mysql -uroot -p$db_pass"
   on:
     branch: master
