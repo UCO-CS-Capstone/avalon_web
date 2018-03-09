@@ -14,6 +14,14 @@ public class PasswordHash {
         this.argon2 = Argon2Factory.create();
     }
 
+    private static class PasswordHashHolder {
+        private static final PasswordHash INSTANCE = new PasswordHash();
+    }
+
+    public static PasswordHash getInstance() {
+        return PasswordHashHolder.INSTANCE;
+    }
+
     public String hash(String password) {
         return this.argon2.hash(this.iterations, this.memory, this.parallelism, password);
     }
