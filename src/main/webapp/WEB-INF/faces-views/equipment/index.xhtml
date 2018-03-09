@@ -15,7 +15,8 @@
                     <b:dataTableColumn value="#{equipment.name}" order="asc" />
                     <b:dataTableColumn value="#{equipment.type}" label="Type" />
                     <b:dataTableColumn label="" orderable="false">
-                        <b:commandButton look="warning" value="Edit" iconAwesome="pencil-square-o" action="#{equipmentBean.beforeEditing(equipment.equipmentID)}" />
+                        <b:commandButton look="info" value="Detail" iconAwesome="info-circle" action="#{equipmentBean.equipmentDetail(equipment.equipmentID)}" />
+                        <b:commandButton look="warning" value="Edit" iconAwesome="pencil-square-o" action="#{equipmentBean.beforeEditing(equipment.equipmentID)}" style="margin-left: 10px;" />
                         <b:commandButton look="danger" value="Delete" iconAwesome="trash" style="margin-left: 10px;"
                                          onclick="if (!confirm('Are you sure you want to delete the current piece of equipment?')) return false"
                                          action="#{equipmentBean.deleteEquipment(equipment.equipmentID)}" />

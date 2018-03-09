@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<ui:composition template="/applayout/pageTemplate.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/applayout/pageTemplate.xhtml">
+        <ui:define name="content">
+            <h1>Equipment Detail</h1>
+            <hr/>
+                <b:row>
+                    <b:column col-md="4">
+                        <strong>Name</strong>
+                    </b:column>
+                    <b:column col-md="8">
+                        #{equipmentBean.name}
+                    </b:column>
+                </b:row>
+                <b:row>
+                    <b:column col-md="4">
+                        <strong>Equipment Type</strong>
+                    </b:column>
+                    <b:column col-md="8">
+                        #{equipmentBean.type}
+                    </b:column>
+                </b:row>
+                <br/>
+                <b:row>
+                    <b:column col-md="8">
+                        <h3>Maintenance Table</h3>
+                        <b:form>
+                            <b:dataTable value="#{equipmentBean.maintenanceList}" var="maintenance" fixedHeader="true"
+                                         scroll-size="400px"
+                                         scroll-x="false"
+                                         responsive="true">
+                                <b:dataTableColumn value="#{maintenance.description}" />
+                                <b:dataTableColumn label="Cost" >
+                                    <h:outputText value="#{maintenance.cost}">
+                                        <f:convertNumber type="currency" currencySymbol="$" />
+                                    </h:outputText>
+                                </b:dataTableColumn>
+                                <b:dataTableColumn value="#{maintenance.nextMaintenanceDate}" label="Next Maintenance Date" order="desc" />
+                                <b:dataTableColumn label="" orderable="false">
+                                    <b:commandButton look="info" value="Edit" iconAwesome="pencil-square-o" rendered="#{!equipmentBean.editingMaintenance}"
+                                                     action="#{equipmentBean.prepareEditingMaintenance(maintenance)}" />
+                                    <b:commandButton look="info" value="Cancel" iconAwesome="ban" rendered="#{equipmentBean.editingMaintenance}"
+                                                     action="#{equipmentBean.cancelEditMaintenance}" />
+                                </b:dataTableColumn>
+                                <b:dataTableColumn label="" orderable="false">
+                                    <b:commandButton look="primary" value="Delete" iconAwesome="trash"
+                                                     onclick="if (!confirm('Are you sure you want to delete the current maintenance?')) return false"
+                                                     action="#{equipmentBean.deleteMaintenance(maintenance.maintenanceID)}" />
+                                </b:dataTableColumn>
+                            </b:dataTable>
+                        </b:form>
+                    </b:column>
+                    <b:column col-md="4">
+                        <b:well>
+                            <b:form id="createMaintenanceForm">
+                                <h:outputText value="Record Maintenance" rendered="#{!equipmentBean.editingMaintenance}" styleClass="h3" />
+                                <h:outputText value="Edit Maintenance" rendered="#{equipmentBean.editingMaintenance}" styleClass="h3" />
+                                <b:inputText id="description" value="#{equipmentBean.description}" label="Description" required="true" />
+                                <b:message for="@previous" />
+                                <b:inputText id="cost" value="#{equipmentBean.cost}" label="Cost" mask="currency" required="true" />
+                                <b:message for="@previous" />
+                                <b:dateTimePicker id="nextMaintenanceDate" value="#{equipmentBean.nextMaintenanceDate}" label="Next Maintenance Date" required="true" show-time="true" allow-input-toggle="true" useCurrent="false" />
+                                <b:message for="@previous" />
+                                <b:commandButton value="Record" look="success" iconAwesome="plus" action="#{equipmentBean.createMaintenance}" rendered="#{!equipmentBean.editingMaintenance}" />
+                                <b:commandButton value="Edit" look="success" iconAwesome="pencil-square-o" action="#{equipmentBean.editMaintenance}" rendered="#{equipmentBean.editingMaintenance}" />
+                            </b:form>
+                        </b:well>
+                    </b:column>
+                </b:row>
+
+            <br/>
+            <b:commandLink id="backButton" outcome="/equipment/index" iconAwesome="arrow-left" value="Back"
+                           look="primary" style="display: inline;" />
+
+        </ui:define>
+    </ui:composition>
+</ui:composition>
