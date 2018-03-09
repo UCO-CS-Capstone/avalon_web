@@ -47,14 +47,10 @@ CREATE TABLE IF NOT EXISTS `allocations` (
   KEY `FK_allocations_equipments` (`equipmentID`),
   CONSTRAINT `FK_allocations_equipments` FOREIGN KEY (`equipmentID`) REFERENCES `equipments` (`equipmentID`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `FK_allocations_projects` FOREIGN KEY (`projectID`) REFERENCES `projects` (`projectID`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
--- Dumping data for table avalon_db.allocations: ~0 rows (approximately)
+-- Dumping data for table avalon_db.allocations: ~5 rows (approximately)
 /*!40000 ALTER TABLE `allocations` DISABLE KEYS */;
-INSERT INTO `allocations` (`allocationID`, `equipmentID`, `projectID`, `lastUpdatedDate`, `lastUpdatedBy`, `isDeleted`) VALUES
-	(1, 1, NULL, '2018-02-16 04:16:19', 'user', 0),
-	(2, 2, NULL, '2018-02-16 04:16:25', 'user', 0),
-	(3, 3, NULL, '2018-02-16 04:16:22', 'user', 0);
 /*!40000 ALTER TABLE `allocations` ENABLE KEYS */;
 
 -- Dumping structure for table avalon_db.equipments
@@ -69,14 +65,10 @@ CREATE TABLE IF NOT EXISTS `equipments` (
   PRIMARY KEY (`equipmentID`),
   KEY `FK_equipments_lu_equipment_types` (`typeID`),
   CONSTRAINT `FK_equipments_lu_equipment_types` FOREIGN KEY (`typeID`) REFERENCES `lu_equipment_types` (`typeID`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
--- Dumping data for table avalon_db.equipments: ~3 rows (approximately)
+-- Dumping data for table avalon_db.equipments: ~5 rows (approximately)
 /*!40000 ALTER TABLE `equipments` DISABLE KEYS */;
-INSERT INTO `equipments` (`equipmentID`, `name`, `typeID`, `lastUpdatedDate`, `lastUpdatedBy`, `isDeleted`) VALUES
-	(1, 'equipment1', 1, '2018-02-15 17:29:29', 'manual insertion', 0),
-	(2, 'table2', 2, '2018-02-15 17:29:46', 'manual insertion', 0),
-	(3, 'equipment3', 3, '2018-02-15 17:29:57', 'manual insertion', 0);
 /*!40000 ALTER TABLE `equipments` ENABLE KEYS */;
 
 -- Dumping structure for table avalon_db.logs
@@ -144,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `lu_user_flags` (
   UNIQUE KEY `flag` (`flag`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
--- Dumping data for table avalon_db.lu_user_flags: ~4 rows (approximately)
+-- Dumping data for table avalon_db.lu_user_flags: ~3 rows (approximately)
 /*!40000 ALTER TABLE `lu_user_flags` DISABLE KEYS */;
 INSERT INTO `lu_user_flags` (`flagID`, `flag`, `lastUpdatedDate`, `lastUpdatedBy`, `isDeleted`) VALUES
 	(1, 'isLocked', '2018-02-13 20:02:56', 'manual insertion', 0),
@@ -156,6 +148,7 @@ INSERT INTO `lu_user_flags` (`flagID`, `flag`, `lastUpdatedDate`, `lastUpdatedBy
 DROP TABLE IF EXISTS `maintenances`;
 CREATE TABLE IF NOT EXISTS `maintenances` (
   `maintenanceID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `description` varchar(50) NOT NULL,
   `equipmentID` int(10) unsigned NOT NULL,
   `cost` decimal(10,2) unsigned NOT NULL,
   `nextMaintenanceDate` datetime NOT NULL,
@@ -165,9 +158,9 @@ CREATE TABLE IF NOT EXISTS `maintenances` (
   PRIMARY KEY (`maintenanceID`),
   KEY `FK_maintenances_equipments` (`equipmentID`),
   CONSTRAINT `FK_maintenances_equipments` FOREIGN KEY (`equipmentID`) REFERENCES `equipments` (`equipmentID`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
--- Dumping data for table avalon_db.maintenances: ~0 rows (approximately)
+-- Dumping data for table avalon_db.maintenances: ~9 rows (approximately)
 /*!40000 ALTER TABLE `maintenances` DISABLE KEYS */;
 /*!40000 ALTER TABLE `maintenances` ENABLE KEYS */;
 
@@ -207,9 +200,9 @@ CREATE TABLE IF NOT EXISTS `projects` (
   `lastUpdatedBy` varchar(50) NOT NULL,
   `isDeleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`projectID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
--- Dumping data for table avalon_db.projects: ~3 rows (approximately)
+-- Dumping data for table avalon_db.projects: ~1 rows (approximately)
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 
@@ -221,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_name` varchar(256) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(256) NOT NULL,
-  `flagID` int(10) unsigned,
+  `flagID` int(10) unsigned DEFAULT NULL,
   `lastUpdatedDate` datetime NOT NULL,
   `lastUpdatedBy` varchar(50) NOT NULL,
   PRIMARY KEY (`userID`),

@@ -69,24 +69,37 @@ public class EquipmentRepository {
         return equipment;
     }
 
-    public static void createEquipment(Equipment equipment) throws SQLException {
+    public static int createEquipment(Equipment equipment) throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
         if (conn == null) {
             throw new SQLException("conn is null");
         }
 
+        // Viet was here
+        int generatedID = 0;
         try {
             String query = "INSERT INTO equipments(name, typeID, lastUpdatedDate, lastUpdatedBy) VALUES (?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(query);
+            PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, equipment.getName());
             //ps.setString(2, equipment.getType());
             ps.setInt(2,equipment.getTypeID());
             ps.setTimestamp(3, Timestamp.valueOf(equipment.getLastUpdatedDate()));
             ps.setString(4, equipment.getLastUpdatedBy());
             ps.executeUpdate();
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    generatedID = generatedKeys.getInt(1);
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
+
         } finally {
             conn.close();
         }
+        return generatedID;
     }
 
     public static void updateEquipment(Equipment equipment) throws SQLException {
