@@ -12,6 +12,10 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Allows for user login, logout, and registration.
+ * Holds data for the current logged in user.
+ */
 @Named
 @SessionScoped
 public class LoginBean implements Serializable {
@@ -36,65 +40,23 @@ public class LoginBean implements Serializable {
         }
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public String toString() {
-        return "LoginBean{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public int getAttempts() {
-        return attempts;
-    }
-
-    public void setAttempts(int attempts) {
-        this.attempts = attempts;
-    }
-
+    /**
+     * Logs a user in with provided credentials
+     *
+     * @return Where to redirect to
+     * @throws SQLException
+     */
     public String login() throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
         if (conn == null) {
             throw new SQLException("conn is null.");
         }
 
-        if (attempts >= 5) {
+        if (attempts >= 5 || locked) {
             email = "";
             password = "";
             loggedIn = false;
+            locked = true;
 
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Too many login attempts. Please contact the administrator at (555) 867-5309 or click on \"Contact\" in the footer."));
@@ -145,6 +107,12 @@ public class LoginBean implements Serializable {
         }
     }
 
+    /**
+     * Insert a user into the database
+     *
+     * @return Where to redirect to
+     * @throws SQLException
+     */
     public String register() throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
         if (conn == null) {
@@ -168,11 +136,57 @@ public class LoginBean implements Serializable {
         return "/dashboard";
     }
 
+    /**
+     * Destroys the current session to log the user out
+     * Then redirects to the login page.
+     *
+     * @throws IOException
+     */
     public void logout() throws IOException {
         loggedIn = false;
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.invalidateSession();
         ec.redirect(ec.getRequestContextPath() + "/");
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getAttempts() {
+        return attempts;
+    }
+
+    public void setAttempts(int attempts) {
+        this.attempts = attempts;
     }
 
     public int getUserID() {
