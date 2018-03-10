@@ -120,7 +120,7 @@ public class UserBean implements Serializable{
 
     public String beforeEdit(int userID) throws Exception{
         UserBean user = DataBase.readOneUser(userID);
-        this.userID = user.getUserID();
+        this.userID = userID;
         this.first_name = user.getFirst();
         this.last_name = user.getLast();
         this.email = user.getEmail();
