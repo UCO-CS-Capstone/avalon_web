@@ -140,8 +140,7 @@ public class UserBean implements Serializable{
         oldInfo.setPassword(this.password);
         oldInfo.setFlagID(this.flagID);
         oldInfo.setLastUpdatedDate(LocalDateTime.now());
-        oldInfo.setLastUpdatedBy("user");
-
+        oldInfo.setLastUpdatedBy("admin");
         DataBase.update(oldInfo);
         userListDB = DataBase.allUsers();
         return "/admin/index";
@@ -153,6 +152,16 @@ public class UserBean implements Serializable{
         DataBase.deleteUser(id);
         userListDB = DataBase.allUsers();
     }
+    public void lock(int id) throws SQLException {
+        DataBase.lock(id);
+        userListDB = DataBase.allUsers();
+    }
+    public void unlock(int id) throws SQLException {
+        DataBase.unlock(id);
+        userListDB = DataBase.allUsers();
+    }
+
+
 
 
 

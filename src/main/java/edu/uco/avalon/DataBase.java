@@ -25,7 +25,7 @@ public class DataBase {
                 user.setLast(rs.getString("last_name"));
                 user.setEmail(rs.getString("email"));
                 user.setUserID(rs.getInt("userID"));
-                user.setPassword(rs.getString("password"));
+                //user.setPassword(rs.getString("password"));
                 user.setFlagID(rs.getInt("flagID"));
                 user.setLastUpdatedDate(rs.getTimestamp("lastUpdatedDate").toLocalDateTime());
                 user.setLastUpdatedBy(rs.getString("lastUpdatedBy"));
@@ -52,16 +52,17 @@ public class DataBase {
         }
 
         try {
+            PasswordHash ph = PasswordHash.getInstance();
             String query = "INSERT INTO users( first_name, last_name, email, password,flagID, lastUpdatedDate,lastUpdatedBy)" +
                     " values (?, ? , ?, ?, ?, ?,?)";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, user.getFirst());
             ps.setString(2, user.getLast());
             ps.setString(3, user.getEmail());
-            ps.setString(4, user.getPassword());
-            ps.setInt(5, user.getFlagID());
+            ps.setString(4, ph.hash(user.getPassword()));
+            ps.setInt(5, 0);
             ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
-            ps.setString(7, user.getLastUpdatedBy());
+            ps.setString(7, "admin");
 
 
 
@@ -80,6 +81,7 @@ public class DataBase {
         }
 
         try {
+            PasswordHash ph = PasswordHash.getInstance();
             String query = "UPDATE users set first_name=?, last_name=?,email=?, password=?, flagID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE userID=?";
 
             PreparedStatement ps = conn.prepareStatement(query);
@@ -95,6 +97,7 @@ public class DataBase {
             ps.setInt(8, user.getUserID());
 
             ps.executeUpdate();
+
         } finally {
             conn.close();
         }
@@ -148,6 +151,35 @@ public class DataBase {
 
 
 
+
+    public static void lock(int user) throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        if (conn == null) {
+            throw new SQLException("conn is null");
+        }
+        try {
+            String query = "update users set flagID = 1 WHERE userID=?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, user);
+            ps.executeUpdate();
+        } finally {
+            conn.close();
+        }
+    }
+    public static void unlock(int user) throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        if (conn == null) {
+            throw new SQLException("conn is null");
+        }
+        try {
+            String query = "update users set flagID = 0 WHERE userID=?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, user);
+            ps.executeUpdate();
+        } finally {
+            conn.close();
+        }
+    }
 
 
 

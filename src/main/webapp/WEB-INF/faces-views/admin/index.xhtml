@@ -27,9 +27,9 @@
                             <b:inputText required="true" id = "first_name" value = "#{userBean.first}" label="First Name" />
                             <b:inputText required="true" id = "last_last" value = "#{userBean.last}" label="Last Name" />
                             <b:inputText required="true" id = "email" value = "#{userBean.email}" label="User Name" />
-                            <b:inputText required="true" id = "password" value = "#{userBean.password}" label="Password" />
+                            <b:inputSecret required="true" id = "password" value = "#{userBean.password}" label="Password" />
                             <b:inputText required="true" id = "flagID" value = "#{userBean.flagID}" label="Flag (0-3)" />
-                            <b:inputText required="true" id = "lastUpdated" value = "#{userBean.lastUpdatedBy}" label="Last Updated By" />
+
 
                             <b:commandButton value="Create" update="@(.editableCarTable)"
                                              action="#{userBean.saveStudentDetails(userBean)}"
@@ -50,56 +50,20 @@
                         </b:modal>
                     </h:form>
 
-                    <h:form id="myFormID2">
-                        <b:modal id="amodal2" title="Update Information" styleClass="modalPseudoClass3"
-                                 closable="false"  close-on-escape="false" backdrop="false">
-
-
-                            <b:inputText required="true" id = "first_name" value = "#{userBean.first}" label="First Name" />
-                            <b:inputText required="true" id = "last_name" value = "#{userBean.last}" label="Last Name" />
-                            <b:inputText required="true" id = "email" value = "#{userBean.email}" label="Email" />
-                            <b:inputText required="true" id = "password" value = "#{userBean.password}" label="Password" />
-                            <b:inputText required="true" id = "flagID" value = "#{userBean.flagID}" label="Flag (1-3)" />
-                            <b:inputText required="true" id = "lastUpdated" value = "#{userBean.lastUpdatedBy}" label="Last Updated By" />
-
-                            <b:commandButton value="Update" update="@(.editableCarTable)"
-                                             action="#{userBean.updateUser(userBean)}"
-                                             onclick = "/index.xhtml?faces-redirect=true"
-                                             outcome="/admin/index"
-                                             class="btn btn-success btnWidth">
-
-                                <f:ajax execute="@this" render="@form" />
-                                <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
-
-                            </b:commandButton>
-
-                            <f:facet name="footer">
-                                <b:button value="Close" dismiss="modal" />
-                                <b:button value="Ok" look="primary" dismiss="modal" />
-                            </f:facet>
-                        </b:modal>
-                    </h:form>
-
-
-
-
-
-
 
 
                     <h:form>
 
 
 
-                        <b:dataTable value="#{userBean.userList()}" var="u" class="editableCarTable" responsive="true" style = "font-size:11.5px;">
+                        <b:dataTable value="#{userBean.userList()}" var="u" class="editableCarTable" responsive="true" style = "font-size:14px;">
                             <b:dataTableColumn style="text-align: center" value="#{u.first}" label = "First Name" />
                             <b:dataTableColumn style="text-align: center" value="#{u.last}" label = "Last Name"/>
                             <b:dataTableColumn style="text-align: center" value="#{u.email}" label = "Email" />
-                            <b:dataTableColumn style="text-align: center" value="#{u.password}" label = "Password"/>
                             <b:dataTableColumn style="text-align: center" value="#{u.lastUpdatedDate}" label = "Last Updated Date"/>
                             <b:dataTableColumn style="text-align: center" value="#{u.flagID}" label = "Flag ID"/>
                             <b:dataTableColumn style="text-align: center" value="#{u.lastUpdatedBy}" label = "Last Updated By"/>
-                            <b:dataTableColumn style="text-align: center" value="#{u.userID}" label = "ID"/>
+
 
 
                             <b:dataTableColumn>
@@ -121,10 +85,15 @@
                             </b:dataTableColumn>
 
                             <b:dataTableColumn>
-                                <b:commandButton label = "Deactivate Account" iconAwesome="user-times" name = "deactivate" size="sm"
-                                                 float="center"  value="deactivate" look="warning" ajax="true"
+                                <b:commandButton label = "Lock Account" iconAwesome="user-times" name = "lock" size="sm"
+                                                 float="center"  value="lock" look="warning" ajax="true"
                                                  update="@(.editableCarTable)"
-                                                 action = "ajax:car.deactivate()">
+                                                 action = "#{userBean.lock(u.userID)}">
+                                </b:commandButton>
+                                <b:commandButton label = "Unlock Account" iconAwesome="user-circle" name = "unlock" size="sm"
+                                                 float="center"  value="unlock" ajax="true"
+                                                 update="@(.editableCarTable)"
+                                                 action = "#{userBean.unlock(u.userID)}">
                                 </b:commandButton>
 
                             </b:dataTableColumn>
