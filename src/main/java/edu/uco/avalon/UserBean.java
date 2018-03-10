@@ -22,8 +22,8 @@ import javax.inject.Named;
 public class UserBean implements Serializable{
 
 
-    private String first;
-    private String last;
+    private String first_name;
+    private String last_name;
     private String email;
     private String password;
     private int userID;
@@ -35,10 +35,10 @@ public class UserBean implements Serializable{
     private ArrayList<UserBean>userListDB;
 
     public String getFirst() {
-        return first;
+        return first_name;
     }
     public String getLast() {
-        return last;
+        return last_name;
     }
 
 
@@ -63,11 +63,11 @@ public class UserBean implements Serializable{
 
 
 
-    public void setFirst(String first) {
-        this.first = first;
+    public void setFirst(String first_name) {
+        this.first_name = first_name;
     }
-    public void setLast(String last) {
-        this.last = last;
+    public void setLast(String last_name) {
+        this.last_name = last_name;
     }
 
     public void setEmail(String email) {
@@ -118,10 +118,33 @@ public class UserBean implements Serializable{
 
 
 
+    public String beforeEdit(int userID) throws Exception{
+        UserBean user = DataBase.readOneUser(userID);
+        this.userID = user.getUserID();
+        this.first_name = user.getFirst();
+        this.last_name = user.getLast();
+        this.email = user.getEmail();
+        this.password  = user.getPassword();
+        this.flagID = user.getFlagID();
+        this.lastUpdatedBy = user.getLastUpdatedBy();
+        return "/admin/update_User";
+    }
+
     /* Method Used To Update Student Record */
-    public void updateUser(UserBean user) throws SQLException{
-        DataBase.update(user);
+    public String updateUser() throws SQLException{
+        UserBean oldInfo = new UserBean();
+        oldInfo.setUserID(this.userID);
+        oldInfo.setFirst(this.first_name);
+        oldInfo.setLast(this.last_name);
+        oldInfo.setEmail(this.email);
+        oldInfo.setPassword(this.password);
+        oldInfo.setFlagID(this.flagID);
+        oldInfo.setLastUpdatedDate(LocalDateTime.now());
+        oldInfo.setLastUpdatedBy("user");
+
+        DataBase.update(oldInfo);
         userListDB = DataBase.allUsers();
+        return "/admin/index";
     }
 
 

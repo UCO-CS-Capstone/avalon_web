@@ -8,28 +8,23 @@
 
     <ui:composition template="/applayout/pageTemplate.xhtml">
         <ui:define name="content">
-            <h:body style="padding-top: 40px; background-color: #add;">
-                <b:container>
+
+
 
                     <b:form>
 
-                        <b:inputText id = "first" value = "#{userBean.first}" label="User Name" />
-                        <b:inputText id = "last" value = "#{userBean.last}" label="Password" />
-                        <b:inputText id = "username" value = "#{userBean.email}" label="User Name" />
+                        <b:inputText id = "first_name" value = "#{userBean.first}" label="First Name" />
+                        <b:inputText id = "last_name" value = "#{userBean.last}" label="Last Name" />
+                        <b:inputText id = "email" value = "#{userBean.email}" label="User Name" />
                         <b:inputText id = "password" value = "#{userBean.password}" label="Password" />
                         <b:inputText id = "flagID" value = "#{userBean.flagID}" label="Flag" />
-                        <b:inputText id = "lastUpdated" value = "#{userBean.lastUpdatedBy}" label="Last Updated By" />
+                        <b:inputText id = "lastUpdatedBy" value = "#{userBean.lastUpdatedBy}" label="Last Updated By" />
 
-                        <b:commandButton value="Update" update="@(.editableCarTable)"
-                                         action="#{userBean.updateUser(userBean)}"
-                                         onclick = "/index?faces-redirect=true"
-                                         class="btn btn-success btnWidth">
-                        </b:commandButton>
+                        <b:commandButton id="createButton" action="#{userBean.updateUser}" iconAwesome="plus" value="Edit User" look="primary" />
                         <b:commandLink id="cancelButton" outcome="/admin/index" iconAwesome="ban" value="Cancel" look="danger" style="display: inline; margin-left: 10px;" />
 
                     </b:form>
-                </b:container>
-            </h:body>
+
 
 
         </ui:define>
