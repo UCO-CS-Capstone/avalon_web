@@ -80,16 +80,19 @@ public class DataBase {
         }
 
         try {
-            String query = "UPDATE users SET email=?, password=?, flagID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE userID=?";
+            String query = "UPDATE users set first_name=?, last_name=?,email=?, password=?, flagID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE userID=?";
 
             PreparedStatement ps = conn.prepareStatement(query);
 
-            ps.setString(1, user.getEmail());
-            ps.setString(2, user.getPassword());
-            ps.setInt(3, user.getFlagID());
-            ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
-            ps.setString(5, user.getLastUpdatedBy());
-            ps.setInt(6, user.getUserID());
+
+            ps.setString(1,user.getFirst());
+            ps.setString(2, user.getLast());
+            ps.setString(3,user.getEmail());
+            ps.setString(4, user.getPassword());
+            ps.setInt(5, user.getFlagID());
+            ps.setTimestamp(6, Timestamp.valueOf(user.getLastUpdatedDate()));
+            ps.setString(7, user.getLastUpdatedBy());
+            ps.setInt(8, user.getUserID());
 
             ps.executeUpdate();
         } finally {
@@ -98,7 +101,35 @@ public class DataBase {
     }
 
 
+    public static UserBean readOneUser(int userID) throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        if (conn == null) {
+            throw new SQLException("conn is null");
+        }
 
+        UserBean user = new UserBean();
+
+        try {
+            String query = "SELECT * FROM users WHERE userID=?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                user.setFirst(rs.getString("first_name"));
+                user.setLast(rs.getString("last_name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setFlagID(rs.getInt("flagID"));
+                user.setLastUpdatedBy(rs.getString("lastUpdatedBy"));
+
+            }
+
+        } finally {
+            conn.close();
+        }
+        return user;
+    }
 
     public static void deleteUser(int user) throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");

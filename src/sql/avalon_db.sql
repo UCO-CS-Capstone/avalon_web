@@ -139,9 +139,11 @@ CREATE TABLE IF NOT EXISTS `lu_user_flags` (
 -- Dumping data for table avalon_db.lu_user_flags: ~3 rows (approximately)
 /*!40000 ALTER TABLE `lu_user_flags` DISABLE KEYS */;
 INSERT INTO `lu_user_flags` (`flagID`, `flag`, `lastUpdatedDate`, `lastUpdatedBy`, `isDeleted`) VALUES
-	(1, 'isLocked', '2018-02-13 20:02:56', 'manual insertion', 0),
+  (0, 'isActive', '2018-02-13 20:02:56', 'manual insertion', 0),
+  (1, 'isLocked', '2018-02-13 20:02:56', 'manual insertion', 0),
 	(2, 'isDeleted', '2018-02-13 20:03:19', 'manual insertion', 0),
 	(3, 'isVerified', '2018-02-13 20:03:38', 'manual insertion', 0);
+
 /*!40000 ALTER TABLE `lu_user_flags` ENABLE KEYS */;
 
 -- Dumping structure for table avalon_db.maintenances
