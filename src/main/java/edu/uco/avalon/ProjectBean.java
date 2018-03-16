@@ -5,6 +5,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Level;
@@ -29,6 +30,15 @@ public class ProjectBean implements Serializable {
     private List<Allocation> unallocatedList;
     private int[] selectedAllocation;
 
+    private String myStyle;
+
+    public String getMyStyle() {
+        return myStyle;
+    }
+
+    public void setMyStyle(String myStyle) {
+        this.myStyle = myStyle;
+    }
     private void filterListByNextMaintenanceDate(List<Allocation> unallocatedList) throws SQLException {
         for (int i = unallocatedList.size()-1; i >= 0; i--) {
             LocalDateTime dateToCompare = MaintenanceRepository.getLatestNextMaintenanceDateForEquipment(unallocatedList.get(i).getEquipmentID());
@@ -177,6 +187,48 @@ public class ProjectBean implements Serializable {
         AllocationRepository.removeAllocationByProject(project);
         ProjectRepository.deleteProject(project);
         projectList = ProjectRepository.readAllProject().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
+    }
+
+    public String calculateStatus(Project project) {
+        StringBuilder status = new StringBuilder();
+        boolean isProblem = false;
+        myStyle = "";
+
+        if (project.getActEndDate() != null) {
+            status.append("Finished");
+            myStyle = "text-success";
+            if (project.getEstEndDate() != null) {
+                if (project.getActEndDate().isAfter(project.getEstEndDate())) {
+                    status.append(" Late");
+                    myStyle = "text-primary";
+                    isProblem = true;
+                }
+            }
+            status.append(", ");
+        }
+        else if (project.getEstEndDate() != null) {
+            if (LocalDate.now().isAfter(project.getEstEndDate())) {
+                status.append("Overdue, ");
+                myStyle = "text-danger";
+                isProblem = true;
+            }
+        }
+
+        if (project.getCurrentCost().compareTo(project.getEstCostOverall()) > 0) {
+            status.append("Overbudget, ");
+            if (!myStyle.equals("text-danger"))
+                myStyle = "text-warning";
+            isProblem = true;
+        }
+
+        if (!isProblem) {
+            status.append("No Issue, ");
+            if (!myStyle.equals("text-success"))
+                myStyle = "text-info";
+        }
+
+        status.setLength(status.length() - 2);
+        return status.toString();
     }
 
     public String getName() {

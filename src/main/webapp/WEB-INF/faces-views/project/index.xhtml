@@ -16,6 +16,9 @@
                              scroll-x="false"
                              responsive="true">
                     <b:dataTableColumn value="#{project.name}" order="asc" />
+                    <b:dataTableColumn label="Status" orderable="false">
+                            <h:outputText value="#{projectBean.calculateStatus(project)}" styleClass="#{projectBean.myStyle}" />
+                    </b:dataTableColumn>
                     <b:dataTableColumn value="#{project.startDate}" label="Start Date" />
                     <b:dataTableColumn value="#{project.estEndDate}" label="Estimated End Date" />
                     <b:dataTableColumn value="#{project.actEndDate}" label="Actual End Date" />
