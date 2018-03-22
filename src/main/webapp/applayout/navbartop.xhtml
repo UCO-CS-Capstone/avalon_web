@@ -22,9 +22,14 @@
                         <b:navLink outcome="/project/index" value="Project" iconAwesome="folder" rendered="#{loginBean.loggedIn}" />
                         <b:navLink outcome="/equipment/index" value="Equipment" iconAwesome="truck" rendered="#{loginBean.loggedIn}" />
                         <b:navLink outcome="/admin/index" value="Admin" iconAwesome="wrench" rendered="#{loginBean.loggedIn}" />
+
                         <b:dropMenu value="Schedule" iconAwesome="calendar"  rendered="#{loginBean.loggedIn}">
                             <b:navLink outcome="/schedule/index" value="ScheduleD" />
                             <b:navLink outcome="/sechdule/index" value="ScheduleP" />
+                        </b:dropMenu>
+                        <b:dropMenu value="Reports" iconAwesome="briefcase"  rendered="#{loginBean.loggedIn}">
+                            <b:navLink outcome="/admin/equipmentReports.xhtml" value="Equipment Reports" />
+                            <b:navLink outcome="/admin/projectReports.xhtml" value="Project Reports" />
                         </b:dropMenu>
                     </b:navbarLinks>
                     <!--<b:dropMenu value="Examples">-->
