@@ -28,8 +28,11 @@
                             <b:navLink outcome="/sechdule/index" value="ScheduleP" />
                         </b:dropMenu>
                         <b:dropMenu value="Reports" iconAwesome="briefcase"  rendered="#{loginBean.loggedIn}">
-                            <b:navLink outcome="/admin/equipmentReports.xhtml" value="Equipment Reports" />
-                            <b:navLink outcome="/admin/projectReports.xhtml" value="Project Reports" />
+                            <b:navLink outcome="/admin/polarReports.xhtml" value="Project Reports (Polar)" />
+                            <b:navLink outcome="/admin/radarReports.xhtml" value="Project Reports (Radar)" />
+                            <b:navLink outcome="/admin/barReports.xhtml" value="Project Reports (Bar)" />
+                            <b:navLink outcome="/admin/linearReports.xhtml" value="Project Reports (Linear)" />
+
                         </b:dropMenu>
                     </b:navbarLinks>
                     <!--<b:dropMenu value="Examples">-->
