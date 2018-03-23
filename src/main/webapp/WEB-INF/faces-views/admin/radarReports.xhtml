@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+
+<ui:composition template="/applayout/pageTemplate.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/applayout/pageTemplate.xhtml">
+        <ui:define name="content">
+            <h1>Reports for Projects (Radar)</h1>
+
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+            <canvas id="reports"></canvas>
+            <script>
+
+
+
+                var canvas = document.getElementById("reports");
+
+                var data = {
+                    labels: ["Estimated Cost", "Current Cost", "Difference"],
+                    datasets: [{
+                        label: "Project 3",
+                        backgroundColor: "rgba(200,0,0,0.2)",
+                        data: [65, 75, 70 ]
+                    }, {
+                        label: "Project 2",
+                        backgroundColor: "rgba(0,0,200,0.2)",
+                        data: [54, 65, 60]
+                    },
+                        {
+                            label: "Project 1",
+                            backgroundColor: "rgba(200,200,250,0.6)",
+                            data: [12, 65, 60]
+                        }],
+
+
+                    borderWidth: 1,
+                    borderColor : '#123',
+                    hoverBorderColor : '#123'
+                };
+
+                var reports = new Chart(canvas, {
+                    type: 'radar',
+                    data: data
+                });
+
+            </script>
+
+
+        </ui:define>
+    </ui:composition>
+</ui:composition>

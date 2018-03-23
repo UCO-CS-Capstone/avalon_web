@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+
+<ui:composition template="/applayout/pageTemplate.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/applayout/pageTemplate.xhtml">
+        <ui:define name="content">
+            <h1>Reports for Projects (Linear Area)</h1>
+
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+            <canvas id="reports"></canvas>
+            <script>
+
+                var ctx = document.getElementById("reports").getContext('2d');
+                var reports = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ["Project 1", "Project 2", "Project 3"],
+                        datasets: [{
+                            label: 'Project',
+                            data: [12, 10, 3],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(32, 162, 235, 0.9)',
+                                'rgba(255, 206, 86, 0.5)',
+
+                            ],
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+
+                            ],
+                            borderWidth: 1,
+                            borderColor : '#123',
+                            hoverBorderColor : '#123'
+
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
+                                }
+                            }]
+                        }
+                    }
+                });
+
+            </script>
+
+
+        </ui:define>
+    </ui:composition>
+</ui:composition>
