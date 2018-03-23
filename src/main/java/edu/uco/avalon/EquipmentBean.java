@@ -202,10 +202,7 @@ public class EquipmentBean implements Serializable {
     }
 
     public static Map<String, Integer> readAllEquipmentTypes() throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         Map<String, Integer> equipmentTypesList = new LinkedHashMap<>();
 

@@ -14,10 +14,7 @@ public class MaintenanceRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         List<Maintenance> maintenanceList = new ArrayList<>();
 
@@ -55,10 +52,7 @@ public class MaintenanceRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "INSERT INTO maintenances(description, equipmentID, cost, nextMaintenanceDate, lastUpdatedDate, lastUpdatedBy)" +
@@ -84,10 +78,7 @@ public class MaintenanceRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "UPDATE maintenances SET description=?, equipmentID=?, cost=?, nextMaintenanceDate=?, " +
@@ -114,10 +105,7 @@ public class MaintenanceRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "UPDATE maintenances SET isDeleted=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE maintenanceID=?";
@@ -140,10 +128,7 @@ public class MaintenanceRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "UPDATE maintenances SET isDeleted=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE equipmentID=?";
@@ -162,10 +147,7 @@ public class MaintenanceRepository {
 
     public static LocalDateTime getLatestNextMaintenanceDateForEquipment(int equipmentID) throws SQLException {
 
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         LocalDateTime latestMaintenanceDate = null;
 
