@@ -14,7 +14,7 @@ public class EquipmentRepository {
         List<Equipment> equipmentList = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM equipments eq JOIN lu_equipment_types let ON eq.typeID = let.typeID";
+            String query = "SELECT * FROM equipments eq JOIN lu_equipment_types let ON eq.typeID = let.typeID WHERE eq.isDeleted = 0";
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 

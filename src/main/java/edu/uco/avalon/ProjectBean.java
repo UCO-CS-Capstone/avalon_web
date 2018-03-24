@@ -1,9 +1,19 @@
 package edu.uco.avalon;
 
+import org.omnifaces.util.Faces;
+import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.constraint.NotNull;
+import org.supercsv.cellprocessor.constraint.UniqueHashCode;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
-import java.io.Serializable;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -229,6 +239,37 @@ public class ProjectBean implements Serializable {
 
         status.setLength(status.length() - 2);
         return status.toString();
+    }
+
+    public static void toCSV() throws IOException, SQLException {
+        CellProcessor[] processors = new CellProcessor[] {
+            new UniqueHashCode(), // projectID (must be unique)
+            new NotNull(), // name
+            new Optional(), // startDate
+            new Optional(), // estEndDate
+            new Optional(), // actEndDate
+            new Optional(), // estCostOverall
+            new Optional(), // currentCost
+            new Optional(), // lastUpdatedDate
+            new Optional(), // lastUpdatedBy
+        };
+        // the header elements are used to map the bean values to each column (names must match)
+        final String[] headers = new String[] {
+                "projectID",
+                "name",
+                "startDate",
+                "estEndDate",
+                "actEndDate",
+                "estCostOverall",
+                "currentCost",
+                "lastUpdatedDate",
+                "lastUpdatedBy"//,
+                //"isDeleted"
+        };
+        List<Project> projects = ProjectRepository.readAllProject();
+        InputStream data = CSVBuilder.create(processors, headers, projects);
+        String filename = CSVBuilder.filename("projects");
+        Faces.sendFile(data, filename, true);
     }
 
     public String getName() {

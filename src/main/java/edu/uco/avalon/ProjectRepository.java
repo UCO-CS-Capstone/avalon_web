@@ -17,7 +17,7 @@ public class ProjectRepository {
         List<Project> projectList = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM projects";
+            String query = "SELECT * FROM projects where isDeleted = 0";
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 

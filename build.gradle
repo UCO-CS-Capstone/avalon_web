@@ -23,6 +23,8 @@ dependencies {
     compile('de.mkammerer:argon2-jvm:2.4')
     compile('org.apache.cxf:cxf-rt-frontend-jaxrs:3.1.12')
     compile('org.apache.pdfbox:pdfbox:2.0.8')
+    compile('net.sf.supercsv:super-csv:2.4.0')
+    compile('net.sf.supercsv:super-csv-joda:2.4.0')
 }
 
 war {
