@@ -12,15 +12,12 @@ public class ProjectRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         List<Project> projectList = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM projects";
+            String query = "SELECT * FROM projects where isDeleted = 0";
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
@@ -53,10 +50,7 @@ public class ProjectRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         Project project = new Project();
 
@@ -93,10 +87,7 @@ public class ProjectRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "INSERT INTO projects(name, startDate, estEndDate, actEndDate," +
@@ -125,10 +116,7 @@ public class ProjectRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "UPDATE projects SET name=?, startDate=?, estEndDate=?, actEndDate=?," +
@@ -157,10 +145,7 @@ public class ProjectRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "UPDATE projects SET isDeleted=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE projectID=?";

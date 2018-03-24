@@ -22,7 +22,10 @@
                                          action="#{equipmentBean.deleteEquipment(equipment.equipmentID)}" />
                     </b:dataTableColumn>
                 </b:dataTable>
-                <b:commandButton look="success" value="Create Equipment" iconAwesome="plus" action="#{equipmentBean.beforeCreate}" />
+                <b:buttonGroup>
+                    <b:commandButton look="success" value="Create Equipment" iconAwesome="plus" action="#{equipmentBean.beforeCreate}" />
+                    <b:commandButton action="#{equipmentBean.toCSV}" value="Download CSV" iconAwesome="download"/>
+                </b:buttonGroup>
             </h:form>
         </ui:define>
     </ui:composition>

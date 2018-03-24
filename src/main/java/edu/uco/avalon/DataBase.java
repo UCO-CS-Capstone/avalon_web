@@ -7,10 +7,7 @@ import java.util.ArrayList;
 public class DataBase {
 
     public static ArrayList<UserBean> allUsers() throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         ArrayList<UserBean> userList = new ArrayList<>();
 
@@ -46,10 +43,7 @@ public class DataBase {
 
     /* Method Used To Save New Student Record In Database */
     public static void saveStudentDetailsInDB(UserBean user) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             PasswordHash ph = PasswordHash.getInstance();
@@ -75,10 +69,7 @@ public class DataBase {
 
 
     public static void update(UserBean user) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             PasswordHash ph = PasswordHash.getInstance();
@@ -105,10 +96,7 @@ public class DataBase {
 
 
     public static UserBean readOneUser(int userID) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         UserBean user = new UserBean();
 
@@ -135,10 +123,7 @@ public class DataBase {
     }
 
     public static void deleteUser(int user) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
         try {
             String query = "delete from users WHERE userID=?";
             PreparedStatement ps = conn.prepareStatement(query);
@@ -153,10 +138,7 @@ public class DataBase {
 
 
     public static void lock(int user) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
         try {
             String query = "update users set flagID = 1 WHERE userID=?";
             PreparedStatement ps = conn.prepareStatement(query);
@@ -167,10 +149,7 @@ public class DataBase {
         }
     }
     public static void unlock(int user) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
         try {
             String query = "update users set flagID = 0 WHERE userID=?";
             PreparedStatement ps = conn.prepareStatement(query);

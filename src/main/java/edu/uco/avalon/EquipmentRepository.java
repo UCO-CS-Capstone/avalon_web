@@ -9,15 +9,12 @@ import java.util.List;
 public class EquipmentRepository {
 
     public static List<Equipment> readAllEquipment() throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         List<Equipment> equipmentList = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM equipments eq JOIN lu_equipment_types let ON eq.typeID = let.typeID";
+            String query = "SELECT * FROM equipments eq JOIN lu_equipment_types let ON eq.typeID = let.typeID WHERE eq.isDeleted = 0";
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
@@ -40,10 +37,7 @@ public class EquipmentRepository {
     }
 
     public static Equipment readOneEquipment(int equipmentID) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         Equipment equipment = new Equipment();
 
@@ -70,10 +64,7 @@ public class EquipmentRepository {
     }
 
     public static int createEquipment(Equipment equipment) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         // Viet was here
         int generatedID = 0;
@@ -103,10 +94,7 @@ public class EquipmentRepository {
     }
 
     public static void updateEquipment(Equipment equipment) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "UPDATE equipments SET name=?, typeID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE equipmentID=?";
@@ -124,10 +112,7 @@ public class EquipmentRepository {
     }
 
     public static void deleteEquipment(int equipmentID) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "UPDATE equipments SET isDeleted=? WHERE equipmentID=?";

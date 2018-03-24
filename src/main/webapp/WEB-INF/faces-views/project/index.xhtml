@@ -45,7 +45,10 @@
                                        action="#{projectBean.deleteProject(project.projectID)}" />
                     </b:dataTableColumn>
                 </b:dataTable>
-                <b:commandButton look="success" value="Create Project" iconAwesome="plus" action="#{projectBean.beforeCreate}" />
+                <b:buttonGroup>
+                    <b:commandButton look="success" value="Create Project" iconAwesome="plus" action="#{projectBean.beforeCreate}" />
+                    <b:commandButton action="#{projectBean.toCSV}" value="Download CSV" iconAwesome="download"/>
+                </b:buttonGroup>
             </h:form>
         </ui:define>
     </ui:composition>

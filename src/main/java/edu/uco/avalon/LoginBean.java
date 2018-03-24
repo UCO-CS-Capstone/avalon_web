@@ -47,10 +47,7 @@ public class LoginBean implements Serializable {
      * @throws SQLException
      */
     public String login() throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         if (attempts >= 5 || locked) {
             email = "";
@@ -114,10 +111,7 @@ public class LoginBean implements Serializable {
      * @throws SQLException
      */
     public String register() throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
         try {
             PasswordHash ph = PasswordHash.getInstance();
             String sql = "INSERT INTO users (first_name, last_name, email, password, lastUpdatedDate, lastUpdatedBy) VALUES (?, ?, ?, ?, curdate(), ?)";

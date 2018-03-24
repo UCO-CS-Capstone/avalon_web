@@ -1,8 +1,16 @@
 package edu.uco.avalon;
 
+import org.omnifaces.util.Faces;
+import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.constraint.NotNull;
+import org.supercsv.cellprocessor.constraint.UniqueHashCode;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -202,10 +210,7 @@ public class EquipmentBean implements Serializable {
     }
 
     public static Map<String, Integer> readAllEquipmentTypes() throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         Map<String, Integer> equipmentTypesList = new LinkedHashMap<>();
 
@@ -224,6 +229,30 @@ public class EquipmentBean implements Serializable {
         return equipmentTypesList;
 
     }
+
+    public static void toCSV() throws IOException, SQLException {
+        CellProcessor[] processors = new CellProcessor[] {
+                new UniqueHashCode(), // projectID (must be unique)
+                new NotNull(), // name
+                new Optional(), // startDate
+                new Optional(), // estEndDate
+                new Optional(), // actEndDate
+        };
+        // the header elements are used to map the bean values to each column (names must match)
+        final String[] headers = new String[] {
+                "equipmentID",
+                "name",
+                "type",
+                "lastUpdatedDate",
+                "lastUpdatedBy"//,
+                //"isDeleted"
+        };
+        List<Equipment> equipment = EquipmentRepository.readAllEquipment();
+        InputStream data = CSVBuilder.create(processors, headers, equipment);
+        String filename = CSVBuilder.filename("equipment");
+        Faces.sendFile(data, filename, true);
+    }
+
     public String getName() {
         return name;
     }

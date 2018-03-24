@@ -13,7 +13,7 @@ public class AllocationRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        Connection conn = ConnectionManager.getConnection();
         if (conn == null) {
             throw new SQLException("conn is null.");
         }
@@ -54,10 +54,7 @@ public class AllocationRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         Allocation allocation = new Allocation();
 
@@ -95,10 +92,7 @@ public class AllocationRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "UPDATE allocations SET projectID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE equipmentID=?";
@@ -123,10 +117,7 @@ public class AllocationRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "UPDATE allocations SET projectID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE allocationID=?";
@@ -151,10 +142,7 @@ public class AllocationRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "UPDATE allocations SET projectID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE projectID=?";
@@ -177,10 +165,7 @@ public class AllocationRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "INSERT INTO allocations(equipmentID, lastUpdatedDate, lastUpdatedBy)" +
@@ -203,10 +188,7 @@ public class AllocationRepository {
 //            throw new SQLException("ds is null.");
 //        }
 //        Connection conn = ds.getConnection();
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        Connection conn = ConnectionManager.getConnection();
 
         try {
             String query = "UPDATE allocations SET isDeleted=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE allocationID=?";
