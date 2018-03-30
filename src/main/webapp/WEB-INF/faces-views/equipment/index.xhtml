@@ -14,6 +14,10 @@
                 <b:dataTable value="#{equipmentBean.equipmentList}" var="equipment">
                     <b:dataTableColumn value="#{equipment.name}" order="asc" />
                     <b:dataTableColumn value="#{equipment.type}" label="Type" />
+                    <b:dataTableColumn label="Next Maintenance Date">
+                        <h:outputText value="#{equipmentBean.getLatestMaintenanceDateForEquipment(equipment)}" styleClass="#{equipmentBean.myStyle}" />
+                    </b:dataTableColumn>
+                    <b:dataTableColumn value="#{equipmentBean.getProjectAllocatedTo(equipment)}" label="Allocated To" />
                     <b:dataTableColumn label="" orderable="false">
                         <b:commandButton look="info" value="Detail" iconAwesome="info-circle" action="#{equipmentBean.equipmentDetail(equipment.equipmentID)}" />
                         <b:commandButton look="warning" value="Edit" iconAwesome="pencil-square-o" action="#{equipmentBean.beforeEditing(equipment.equipmentID)}" style="margin-left: 10px;" />
