@@ -11,6 +11,8 @@ import org.supercsv.prefs.CsvPreference;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -102,6 +104,37 @@ public class ProjectBean implements Serializable {
         this.estCostOverall = null;
         this.currentCost = null;
         return "/project/create";
+    }
+
+    public String validateProject() throws Exception {
+        boolean isError = false;
+
+        if (this.startDate != null && this.actEndDate != null) {
+            if (this.startDate.after(this.actEndDate)) {
+                isError = true;
+                FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Start Date cannot be after Actual End Date.", null);
+                FacesContext.getCurrentInstance().addMessage("project", facesMessage);
+            }
+        }
+        if (this.startDate != null && this.estEndDate != null) {
+            if (this.startDate.after(this.estEndDate)) {
+                isError = true;
+                FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Start Date cannot be after Estimated End Date.", null);
+                FacesContext.getCurrentInstance().addMessage("project", facesMessage);
+            }
+        }
+
+        if (!isError) {
+            if (this.projectID == 0) {
+                return this.createProject();
+            }
+            else {
+                return this.editProject();
+            }
+        }
+        return null;
     }
 
     public String createProject() throws Exception {

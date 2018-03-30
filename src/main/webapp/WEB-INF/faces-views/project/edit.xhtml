@@ -10,7 +10,9 @@
         <ui:define name="content">
             <h1>Project Edit</h1>
             <hr/>
-            <b:form>
+            <b:form id="project">
+                <b:message for="project" />
+
                 <b:inputText id="name" value="#{projectBean.name}" label="Name" required="true" />
                 <b:message for="@previous" />
                 <b:dateTimePicker id="startDate" value="#{projectBean.startDate}" label="Start Date" show-time="false" allow-input-toggle="true" useCurrent="false" />
@@ -23,7 +25,7 @@
                 <b:message for="@previous" />
                 <b:inputText id="currentCost" value="#{projectBean.currentCost}" label="Current Cost" mask="currency" />
                 <b:message for="@previous" />
-                <b:commandButton id="editButton" action="#{projectBean.editProject}" iconAwesome="pencil-square-o" value="Save Project" look="success" />
+                <b:commandButton id="editButton" action="#{projectBean.validateProject}" iconAwesome="pencil-square-o" value="Save Project" look="success" />
                 <b:commandLink id="cancelButton" outcome="/project/index" iconAwesome="ban" value="Cancel" look="primary" style="display: inline; margin-left: 10px;" />
             </b:form>
         </ui:define>
