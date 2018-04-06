@@ -7,16 +7,9 @@ import java.util.List;
 public class ProjectRepository {
 
     public static List<Project> readAllProject() throws SQLException {
-
-//        if (ds == null) {
-//            throw new SQLException("ds is null.");
-//        }
-//        Connection conn = ds.getConnection();
-        Connection conn = ConnectionManager.getConnection();
-
         List<Project> projectList = new ArrayList<>();
 
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "SELECT * FROM projects where isDeleted = 0";
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -36,25 +29,15 @@ public class ProjectRepository {
                 projectList.add(project);
             }
         }
-        finally {
-            conn.close();
-        }
 
         return projectList;
 
     }
 
     public static Project readOneProject(int projectID) throws SQLException {
-
-//        if (ds == null) {
-//            throw new SQLException("ds is null.");
-//        }
-//        Connection conn = ds.getConnection();
-        Connection conn = ConnectionManager.getConnection();
-
         Project project = new Project();
 
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "SELECT * FROM projects WHERE projectID=?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, projectID);
@@ -73,23 +56,13 @@ public class ProjectRepository {
                 project.setDeleted(rs.getBoolean("isDeleted"));
             }
         }
-        finally {
-            conn.close();
-        }
 
         return project;
 
     }
 
     public static void createProject(Project project) throws SQLException {
-
-//        if (ds == null) {
-//            throw new SQLException("ds is null.");
-//        }
-//        Connection conn = ds.getConnection();
-        Connection conn = ConnectionManager.getConnection();
-
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "INSERT INTO projects(name, startDate, estEndDate, actEndDate," +
                     "estCostOverall, currentCost, lastUpdatedDate, lastUpdatedBy)" +
                     " values (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -104,21 +77,11 @@ public class ProjectRepository {
             ps.setString(8, project.getLastUpdatedBy());
             ps.executeUpdate();
         }
-        finally {
-            conn.close();
-        }
 
     }
 
     public static void updateProject(Project project) throws SQLException {
-
-//        if (ds == null) {
-//            throw new SQLException("ds is null.");
-//        }
-//        Connection conn = ds.getConnection();
-        Connection conn = ConnectionManager.getConnection();
-
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "UPDATE projects SET name=?, startDate=?, estEndDate=?, actEndDate=?," +
                     "estCostOverall=?, currentCost=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE  projectID=?";
             PreparedStatement ps = conn.prepareStatement(query);
@@ -133,21 +96,11 @@ public class ProjectRepository {
             ps.setInt(9, project.getProjectID());
             ps.executeUpdate();
         }
-        finally {
-            conn.close();
-        }
 
     }
 
     public static void deleteProject(Project project) throws SQLException {
-
-//        if (ds == null) {
-//            throw new SQLException("ds is null.");
-//        }
-//        Connection conn = ds.getConnection();
-        Connection conn = ConnectionManager.getConnection();
-
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "UPDATE projects SET isDeleted=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE projectID=?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setBoolean(1, true);
@@ -155,9 +108,6 @@ public class ProjectRepository {
             ps.setString(3, project.getLastUpdatedBy());
             ps.setInt(4, project.getProjectID());
             ps.executeUpdate();
-        }
-        finally {
-            conn.close();
         }
 
     }

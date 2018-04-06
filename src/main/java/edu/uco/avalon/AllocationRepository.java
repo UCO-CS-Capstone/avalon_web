@@ -1,6 +1,5 @@
 package edu.uco.avalon;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,18 +8,9 @@ public class AllocationRepository {
 
     public static List<Allocation> readAllAllocation() throws SQLException {
 
-//        if (ds == null) {
-//            throw new SQLException("ds is null.");
-//        }
-//        Connection conn = ds.getConnection();
-        Connection conn = ConnectionManager.getConnection();
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
-
         List<Allocation> allocationList = new ArrayList<>();
 
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "SELECT * FROM allocations " +
                     "JOIN (equipments) ON (allocations.equipmentID = equipments.equipmentID) " +
                     "LEFT JOIN (projects) ON (allocations.projectID = projects.projectID)";
@@ -40,25 +30,15 @@ public class AllocationRepository {
                 allocationList.add(allocation);
             }
         }
-        finally {
-            conn.close();
-        }
 
         return allocationList;
 
     }
 
     public static Allocation readOneAllocationByEquipmentID(int equipmentID) throws SQLException {
-
-//        if (ds == null) {
-//            throw new SQLException("ds is null.");
-//        }
-//        Connection conn = ds.getConnection();
-        Connection conn = ConnectionManager.getConnection();
-
         Allocation allocation = new Allocation();
 
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "SELECT * FROM allocations " +
                     "JOIN (equipments) ON (allocations.equipmentID = equipments.equipmentID) " +
                     "LEFT JOIN (projects) ON (allocations.projectID = projects.projectID) " +
@@ -78,73 +58,41 @@ public class AllocationRepository {
                 allocation.setDeleted(rs.getBoolean("allocations.isDeleted"));
             }
         }
-        finally {
-            conn.close();
-        }
 
         return allocation;
 
     }
     
     public static void addAllocation(int[] selectedAllocation, Allocation allocation) throws SQLException {
-
-//        if (ds == null) {
-//            throw new SQLException("ds is null.");
-//        }
-//        Connection conn = ds.getConnection();
-        Connection conn = ConnectionManager.getConnection();
-
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "UPDATE allocations SET projectID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE equipmentID=?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, allocation.getProjectID());
             ps.setTimestamp(2, Timestamp.valueOf(allocation.getLastUpdatedDate()));
             ps.setString(3, allocation.getLastUpdatedBy());
-            for (int i = 0; i < selectedAllocation.length; i++) {
-                ps.setInt(4, selectedAllocation[i]);
+            for (int aSelectedAllocation : selectedAllocation) {
+                ps.setInt(4, aSelectedAllocation);
                 ps.executeUpdate();
             }
         }
-        finally {
-            conn.close();
-        }
-
     }
 
     public static void removeAllocationByAllocationID(int[] removedAllocation, Allocation allocation) throws SQLException {
-
-//        if (ds == null) {
-//            throw new SQLException("ds is null.");
-//        }
-//        Connection conn = ds.getConnection();
-        Connection conn = ConnectionManager.getConnection();
-
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "UPDATE allocations SET projectID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE allocationID=?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setNull(1, Types.INTEGER);
             ps.setTimestamp(2, Timestamp.valueOf(allocation.getLastUpdatedDate()));
             ps.setString(3, allocation.getLastUpdatedBy());
-            for (int i = 0; i < removedAllocation.length; i++) {
-                ps.setInt(4, removedAllocation[i]);
+            for (int aRemovedAllocation : removedAllocation) {
+                ps.setInt(4, aRemovedAllocation);
                 ps.executeUpdate();
             }
         }
-        finally {
-            conn.close();
-        }
-
     }
 
     public static void removeAllocationByProject(Project project) throws SQLException {
-
-//        if (ds == null) {
-//            throw new SQLException("ds is null.");
-//        }
-//        Connection conn = ds.getConnection();
-        Connection conn = ConnectionManager.getConnection();
-
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "UPDATE allocations SET projectID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE projectID=?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setNull(1, Types.INTEGER);
@@ -153,21 +101,10 @@ public class AllocationRepository {
             ps.setInt(4, project.getProjectID());
             ps.executeUpdate();
         }
-        finally {
-            conn.close();
-        }
-
     }
 
     public static void createAllocation(Allocation allocation) throws SQLException {
-
-//        if (ds == null) {
-//            throw new SQLException("ds is null.");
-//        }
-//        Connection conn = ds.getConnection();
-        Connection conn = ConnectionManager.getConnection();
-
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "INSERT INTO allocations(equipmentID, lastUpdatedDate, lastUpdatedBy)" +
                     " values (?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(query);
@@ -176,21 +113,10 @@ public class AllocationRepository {
             ps.setString(3, allocation.getLastUpdatedBy());
             ps.executeUpdate();
         }
-        finally {
-            conn.close();
-        }
-
     }
 
     public static void deleteAllocation(Allocation allocation) throws SQLException {
-
-//        if (ds == null) {
-//            throw new SQLException("ds is null.");
-//        }
-//        Connection conn = ds.getConnection();
-        Connection conn = ConnectionManager.getConnection();
-
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "UPDATE allocations SET isDeleted=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE allocationID=?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setBoolean(1, true);
@@ -199,11 +125,5 @@ public class AllocationRepository {
             ps.setInt(4, allocation.getAllocationID());
             ps.executeUpdate();
         }
-        finally {
-            conn.close();
-        }
-
     }
-
-
 }

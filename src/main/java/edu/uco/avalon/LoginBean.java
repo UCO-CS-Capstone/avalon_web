@@ -47,27 +47,24 @@ public class LoginBean implements Serializable {
      * @throws SQLException
      */
     public String login() throws SQLException {
-        Connection conn = ConnectionManager.getConnection();
+        try (Connection conn = ConnectionManager.getConnection()) {
+            // Lock out
+            if (attempts >= 5 || locked) {
+                email = "";
+                password = "";
+                loggedIn = false;
+                locked = true;
 
-        if (attempts >= 5 || locked) {
-            email = "";
-            password = "";
-            loggedIn = false;
-            locked = true;
-
-            FacesContext fc = FacesContext.getCurrentInstance();
-            fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Too many login attempts. Please contact the administrator at (555) 867-5309 or click on \"Contact\" in the footer."));
-            try {
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Too many login attempts. Please contact the administrator at (555) 867-5309 or click on \"Contact\" in the footer."));
                 String sql = "UPDATE users SET flagID = 1 WHERE email = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setString(1, email);
                 ps.execute();
-            } finally {
-                conn.close();
+                return "";
             }
-            return "";
-        }
-        try {
+
+            // Attempt login
             PasswordHash ph = PasswordHash.getInstance();
             String sql = "SELECT * FROM users WHERE email = ?  AND flagID IS NULL";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -78,6 +75,7 @@ public class LoginBean implements Serializable {
                 hashed = rs.getString("password");
 
                 if (ph.verify(hashed, this.password)) {
+                    // Success
                     loggedIn = true;
 
                     userID = rs.getInt("userID");
@@ -87,10 +85,9 @@ public class LoginBean implements Serializable {
                     password = "";
                 }
             }
-        } finally {
-            conn.close();
         }
 
+        // Failure
         if (!this.loggedIn) {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Invalid username or password."));
@@ -111,8 +108,7 @@ public class LoginBean implements Serializable {
      * @throws SQLException
      */
     public String register() throws SQLException {
-        Connection conn = ConnectionManager.getConnection();
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             PasswordHash ph = PasswordHash.getInstance();
             String sql = "INSERT INTO users (first_name, last_name, email, password, lastUpdatedDate, lastUpdatedBy) VALUES (?, ?, ?, ?, curdate(), ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -124,8 +120,6 @@ public class LoginBean implements Serializable {
             ps.execute();
             loggedIn = true;
             password = "";
-        } finally {
-            conn.close();
         }
         return "/dashboard";
     }

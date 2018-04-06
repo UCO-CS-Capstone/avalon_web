@@ -23,7 +23,7 @@
                     <b:commandButton  name="add" value="Save" icon="add"
                                       ajax="true"
                                       update=":listForm:scheduleTable"
-                                      onclick="ajax:sechdule.save()"
+                                      onclick="sechdule.save()"
                                       oncomplete="$('.editModal').modal('hide')"
                     >
                     </b:commandButton>
@@ -45,7 +45,7 @@
                             ajax="true"
                             icon="trash"
                             update="@(.editableCarTable)"
-                            onclick="ajax:sechdule.delete(sche)"
+                            onclick="sechdule.delete(sche)"
                     >
                     </b:commandButton>
                 </b:dataTableColumn>
@@ -55,7 +55,7 @@
                     iconAwesome="plus"
                     look="success"
                     update="@(.editModal)"
-                    onclick="ajax:sechdule.beforeCreate()"
+                    onclick="sechdule.beforeCreate()"
                     oncomplete="$('.editModal').modal()"
             />
         </h:form>

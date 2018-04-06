@@ -13,13 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -247,11 +242,10 @@ public class EquipmentBean implements Serializable {
     }
 
     public static Map<String, Integer> readAllEquipmentTypes() throws SQLException {
-        Connection conn = ConnectionManager.getConnection();
 
         Map<String, Integer> equipmentTypesList = new LinkedHashMap<>();
 
-        try {
+        try (Connection conn = ConnectionManager.getConnection()) {
             String query = "SELECT * FROM lu_equipment_types";
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -259,8 +253,6 @@ public class EquipmentBean implements Serializable {
             while (rs.next()) {
                 equipmentTypesList.put(rs.getString("description"), rs.getInt("typeID"));
             }
-        } finally {
-            conn.close();
         }
 
         return equipmentTypesList;
