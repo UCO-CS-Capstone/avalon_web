@@ -9,13 +9,17 @@ import de.mkammerer.argon2.Argon2Factory;
  */
 public class PasswordHash {
 
-    private int iterations = 2;
-    private int memory = 65536;
-    private int parallelism = 1;
+    private static int iterations = 2;
+    private static int memory = 65536;
+    private static int parallelism = 1;
 
     private Argon2 argon2;
 
-    PasswordHash() {
+    /**
+     * Constructor is private so that it cannot be called
+     * with "new" keyword elsewhere
+     */
+    private PasswordHash() {
         this.argon2 = Argon2Factory.create();
     }
 
@@ -40,7 +44,7 @@ public class PasswordHash {
      * @return The encoded password
      */
     public String hash(String password) {
-        return this.argon2.hash(this.iterations, this.memory, this.parallelism, password);
+        return this.argon2.hash(iterations, memory, parallelism, password);
     }
 
     /**
@@ -51,5 +55,21 @@ public class PasswordHash {
      */
     public boolean verify(String hashed, String unhashed) {
         return this.argon2.verify(hashed, unhashed);
+    }
+
+    public static int getIterations() {
+        return iterations;
+    }
+
+    public static int getMemory() {
+        return memory;
+    }
+
+    public static int getParallelism() {
+        return parallelism;
+    }
+
+    public Argon2 getArgon2() {
+        return argon2;
     }
 }
