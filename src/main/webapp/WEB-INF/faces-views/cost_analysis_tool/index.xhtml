@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:b="http://bootsfaces.net/ui"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition template="/applayout/pageTemplate.xhtml">
+    <ui:define name="content">
+        <h1>Cost Analysis Tool</h1>
+        <hr/>
+        <b:alert rendered="#{!costAnalysisTool.productOwner}">You have no permission!</b:alert>
+        <b:dataTable value="#{costAnalysisTool.costs}" var="cost" class="editableCarTable" id="scheduleTable" rendered="#{costAnalysisTool.productOwner}">
+            <b:dataTableColumn value="#{cost.name}" />
+            <b:dataTableColumn value="#{cost.cost}" />
+        </b:dataTable>
+    </ui:define>
+</ui:composition>
+</html>
