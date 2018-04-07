@@ -27,6 +27,15 @@
                     </b:column>
                 </b:row>
                 <br/>
+
+                <b:row style="padding-bottom: 20px" rendered="#{!equipmentBean.editingMaintenance}">
+                    <b:column col-xs="12">
+                        <b:fullCalendar events="#{equipmentBean.getCalendarEventListJson()}"
+                                        dayClick="function(calEvent, jsEvent, view){}"
+                                        eventClick="function(calEvent, jsEvent, view){ $('.maintenance-' + calEvent.id).click() }"/>
+                    </b:column>
+                </b:row>
+
                 <b:row>
                     <b:column col-md="8">
                         <h3>Maintenance Table</h3>
@@ -44,9 +53,9 @@
                                 <b:dataTableColumn value="#{maintenance.nextMaintenanceDate}" label="Next Maintenance Date" order="desc" />
                                 <b:dataTableColumn label="" orderable="false">
                                     <b:commandButton look="info" value="Edit" iconAwesome="pencil-square-o" rendered="#{!equipmentBean.editingMaintenance}"
-                                                     action="#{equipmentBean.prepareEditingMaintenance(maintenance)}" />
+                                                     action="#{equipmentBean.prepareEditingMaintenance(maintenance)}" styleClass="maintenance-#{maintenance.maintenanceID}" />
                                     <b:commandButton look="info" value="Cancel" iconAwesome="ban" rendered="#{equipmentBean.editingMaintenance}"
-                                                     action="#{equipmentBean.cancelEditMaintenance}" />
+                                                     action="#{equipmentBean.cancelEditMaintenance}" styleClass="maintenance-#{maintenance.maintenanceID}" />
                                 </b:dataTableColumn>
                                 <b:dataTableColumn label="" orderable="false">
                                     <b:commandButton look="primary" value="Delete" iconAwesome="trash"

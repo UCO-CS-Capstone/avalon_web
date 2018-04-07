@@ -1,5 +1,6 @@
 package edu.uco.avalon;
 
+import net.bootsfaces.component.fullCalendar.FullCalendarEventList;
 import org.omnifaces.util.Faces;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.constraint.NotNull;
@@ -14,6 +15,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.*;
 import java.util.logging.Level;
@@ -280,6 +282,20 @@ public class EquipmentBean implements Serializable {
         InputStream data = CSVBuilder.create(processors, headers, equipment);
         String filename = CSVBuilder.filename("equipment");
         Faces.sendFile(data, filename, true);
+    }
+
+    public FullCalendarEventList getCalendarEventList() throws SQLException {
+        FullCalendarEventList list = new FullCalendarEventList();
+        for (Maintenance maintenance : this.maintenanceList) {
+            Date date = Date.from(maintenance.getNextMaintenanceDate().atZone(ZoneId.systemDefault()).toInstant());
+            CalendarEntry entry = new CalendarEntry(maintenance.getMaintenanceID(), maintenance.getDescription(), date);
+            list.getList().add(entry);
+        }
+        return list;
+    }
+
+    public String getCalendarEventListJson() throws SQLException {
+        return this.getCalendarEventList().toJson();
     }
 
     public String getName() {
