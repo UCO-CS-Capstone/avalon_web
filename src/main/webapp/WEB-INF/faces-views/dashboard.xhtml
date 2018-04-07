@@ -9,11 +9,23 @@
     <ui:composition template="/applayout/pageTemplate.xhtml">
         <ui:define name="content">
             <b:container>
-                <h1>Dashboard</h1>
+                <b:row>
+                    <h1>Dashboard</h1>
+                </b:row>
+                <b:row>
+                    <b:column>
+                        <b:messages/>
+                        <h3>Welcome, #{loginBean.firstName}.</h3>
+                    </b:column>
+                </b:row>
                 <hr/>
-                <b:column span="10" offset="1">
-                <b:messages/>
-                    <h3>Welcome, #{loginBean.firstName}.</h3>
+                <b:column>
+                    <h3 class="text-center">Upcoming Maintenance</h3>
+                    <b:row style="padding-top: 20px" rendered="#{!equipmentBean.editingMaintenance}">
+                        <b:fullCalendar events="#{dashboardBean.getCalendarEventListJson()}"
+                                        dayClick="function(calEvent, jsEvent, view){}"
+                                        eventClick="function(calEvent, jsEvent, view){ window.location.href = '/equipment/' }"/>
+                    </b:row>
                 </b:column>
             </b:container>
         </ui:define>
