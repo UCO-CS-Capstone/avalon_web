@@ -131,7 +131,7 @@ public class EquipmentRepository {
         return generatedID;
     }
 
-    public static List<EquipmentType> readAllEquipmentType() throws SQLException {
+    /*public static List<EquipmentType> readAllEquipmentType() throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
         if (conn == null) {
             throw new SQLException("conn is null");
@@ -158,6 +158,6 @@ public class EquipmentRepository {
         }
 
         return equipmentTypeList;
-    }
+    }*/
 }
 
