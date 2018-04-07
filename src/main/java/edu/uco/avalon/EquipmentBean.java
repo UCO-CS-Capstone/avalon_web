@@ -29,7 +29,6 @@ public class EquipmentBean implements Serializable {
 
     private List<Equipment> equipmentList;
     private Map<String, Integer> equipmentTypesList;
-    //private List<EquipmentType> equipmentTypeList;
     private Integer selectedEquipmentTypeValue;
     private int equipmentID;
     private String name;
