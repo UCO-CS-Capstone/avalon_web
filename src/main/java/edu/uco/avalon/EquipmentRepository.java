@@ -60,7 +60,6 @@ public class EquipmentRepository {
             String query = "INSERT INTO equipments(name, typeID, lastUpdatedDate, lastUpdatedBy) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, equipment.getName());
-            //ps.setString(2, equipment.getType());
             ps.setInt(2, equipment.getTypeID());
             ps.setTimestamp(3, Timestamp.valueOf(equipment.getLastUpdatedDate()));
             ps.setString(4, equipment.getLastUpdatedBy());
@@ -83,7 +82,6 @@ public class EquipmentRepository {
             String query = "UPDATE equipments SET name=?, typeID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE equipmentID=?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, equipment.getName());
-            //ps.setString(2, equipment.getType());
             ps.setInt(2, equipment.getTypeID());
             ps.setTimestamp(3, Timestamp.valueOf(equipment.getLastUpdatedDate()));
             ps.setString(4, equipment.getLastUpdatedBy());
@@ -100,6 +98,35 @@ public class EquipmentRepository {
             ps.setInt(2, equipmentID);
             ps.executeUpdate();
         }
+    }
+
+    public static int createEquipmentType(EquipmentType equipmentType) throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        if (conn == null) {
+            throw new SQLException("conn is null");
+        }
+
+        int generatedID = 0;
+        try {
+            String query = "INSERT INTO lu_equipment_types(description, lastUpdatedDate, lastUpdatedBy) VALUES ( ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, equipmentType.getDescription());
+            ps.setTimestamp(2, Timestamp.valueOf(equipmentType.getLastUpdatedDate()));
+            ps.setString(3, equipmentType.getLastUpdatedBy());
+            ps.executeUpdate();
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    generatedID = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
+
+        } finally {
+            conn.close();
+        }
+        return generatedID;
     }
 }
 

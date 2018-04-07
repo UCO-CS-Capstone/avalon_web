@@ -114,6 +114,12 @@ public class EquipmentBean implements Serializable {
         return "/equipment/create";
     }
 
+    public String beforeCreateType() {
+        this.typeID = 0;
+        this.description = null;
+        return "/equipment/createType";
+    }
+
     public String createEquipment() throws Exception{
         Equipment newEquipment = new Equipment();
         newEquipment.setName(this.name);
@@ -260,6 +266,20 @@ public class EquipmentBean implements Serializable {
         return equipmentTypesList;
 
     }
+
+    public String createEquipmentType() throws Exception{
+        EquipmentType newEquipmentType = new EquipmentType();
+        newEquipmentType.setDescription(this.description);
+        newEquipmentType.setLastUpdatedBy("user");
+        newEquipmentType.setLastUpdatedDate(LocalDateTime.now());
+        int generatedID = EquipmentRepository.createEquipmentType(newEquipmentType);
+        equipmentTypesList = readAllEquipmentTypes().entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+        return "/equipment/index";
+    }
+
 
     public static void toCSV() throws IOException, SQLException {
         CellProcessor[] processors = new CellProcessor[] {
