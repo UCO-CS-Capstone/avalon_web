@@ -47,7 +47,8 @@ public class ProjectBean implements Serializable {
     public void setMyStyle(String myStyle) {
         this.myStyle = myStyle;
     }
-    private void filterListByNextMaintenanceDate(List<Allocation> unallocatedList) throws SQLException {
+
+    public void filterListByNextMaintenanceDate(List<Allocation> unallocatedList) throws SQLException {
         for (int i = unallocatedList.size()-1; i >= 0; i--) {
             LocalDateTime dateToCompare = MaintenanceRepository.getLatestNextMaintenanceDateForEquipment(unallocatedList.get(i).getEquipmentID());
             if (dateToCompare == null) {}
