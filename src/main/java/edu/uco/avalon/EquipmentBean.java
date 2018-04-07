@@ -29,6 +29,7 @@ public class EquipmentBean implements Serializable {
 
     private List<Equipment> equipmentList;
     private Map<String, Integer> equipmentTypesList;
+    private List<EquipmentType> equipmentTypeList;
     private Integer selectedEquipmentTypeValue;
     private int equipmentID;
     private String name;
@@ -83,6 +84,8 @@ public class EquipmentBean implements Serializable {
                     .sorted(Map.Entry.comparingByKey())
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                             (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+            equipmentTypeList = EquipmentRepository.readAllEquipmentType().stream().
+                    filter(x -> !x.isDeleted()).collect(Collectors.toList());
         } catch (Exception ex) {
             Logger.getLogger(EquipmentBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -112,6 +115,12 @@ public class EquipmentBean implements Serializable {
         this.type = null;
         this.typeID = 0;
         return "/equipment/create";
+    }
+
+    public String beforeCreateType() {
+        this.typeID = 0;
+        this.description = null;
+        return "/equipment/createType";
     }
 
     public String createEquipment() throws Exception{
@@ -260,6 +269,17 @@ public class EquipmentBean implements Serializable {
         return equipmentTypesList;
 
     }
+
+    public String createEquipmentType() throws Exception{
+        EquipmentType newEquipmentType = new EquipmentType();
+        newEquipmentType.setDescription(this.description);
+        newEquipmentType.setLastUpdatedBy("user");
+        newEquipmentType.setLastUpdatedDate(LocalDateTime.now());
+        int generatedID = EquipmentRepository.createEquipmentType(newEquipmentType);
+        equipmentTypeList = EquipmentRepository.readAllEquipmentType().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
+        return "/equipment/index";
+    }
+
 
     public static void toCSV() throws IOException, SQLException {
         CellProcessor[] processors = new CellProcessor[] {

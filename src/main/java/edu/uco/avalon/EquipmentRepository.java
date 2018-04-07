@@ -101,5 +101,63 @@ public class EquipmentRepository {
             ps.executeUpdate();
         }
     }
+
+    public static int createEquipmentType(EquipmentType equipmentType) throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        if (conn == null) {
+            throw new SQLException("conn is null");
+        }
+
+        int generatedID = 0;
+        try {
+            String query = "INSERT INTO lu_equipment_types(description, lastUpdatedDate, lastUpdatedBy) VALUES ( ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, equipmentType.getDescription());
+            ps.setTimestamp(2, Timestamp.valueOf(equipmentType.getLastUpdatedDate()));
+            ps.setString(3, equipmentType.getLastUpdatedBy());
+            ps.executeUpdate();
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    generatedID = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
+
+        } finally {
+            conn.close();
+        }
+        return generatedID;
+    }
+
+    public static List<EquipmentType> readAllEquipmentType() throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
+        if (conn == null) {
+            throw new SQLException("conn is null");
+        }
+
+        List<EquipmentType> equipmentTypeList = new ArrayList<>();
+
+        try {
+            String query = "SELECT * FROM lu_equipment_types eq";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                EquipmentType equipmentType = new EquipmentType();
+                equipmentType.setEquipmentTypeID(rs.getInt("typeID"));
+                equipmentType.setDescription(rs.getString("description"));
+                equipmentType.setLastUpdatedDate(rs.getTimestamp("lastUpdatedDate").toLocalDateTime());
+                equipmentType.setLastUpdatedBy(rs.getString("lastUpdatedBy"));
+                equipmentType.setDeleted(rs.getBoolean("isDeleted"));
+                equipmentTypeList.add(equipmentType);
+            }
+        } finally {
+            conn.close();
+        }
+
+        return equipmentTypeList;
+    }
 }
 
