@@ -277,6 +277,10 @@ public class EquipmentBean implements Serializable {
         newEquipmentType.setLastUpdatedDate(LocalDateTime.now());
         int generatedID = EquipmentRepository.createEquipmentType(newEquipmentType);
         //equipmentTypeList = EquipmentRepository.readAllEquipmentType().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
+        equipmentTypesList = readAllEquipmentTypes().entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
         return "/equipment/index";
     }
 
