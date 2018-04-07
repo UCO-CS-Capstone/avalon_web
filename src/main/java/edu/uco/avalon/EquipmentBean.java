@@ -84,8 +84,6 @@ public class EquipmentBean implements Serializable {
                     .sorted(Map.Entry.comparingByKey())
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                             (oldValue, newValue) -> oldValue, LinkedHashMap::new));
-            //equipmentTypeList = EquipmentRepository.readAllEquipmentType().stream().
-                    //filter(x -> !x.isDeleted()).collect(Collectors.toList());
         } catch (Exception ex) {
             Logger.getLogger(EquipmentBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -276,7 +274,6 @@ public class EquipmentBean implements Serializable {
         newEquipmentType.setLastUpdatedBy("user");
         newEquipmentType.setLastUpdatedDate(LocalDateTime.now());
         int generatedID = EquipmentRepository.createEquipmentType(newEquipmentType);
-        //equipmentTypeList = EquipmentRepository.readAllEquipmentType().stream().filter(x -> !x.isDeleted()).collect(Collectors.toList());
         equipmentTypesList = readAllEquipmentTypes().entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,

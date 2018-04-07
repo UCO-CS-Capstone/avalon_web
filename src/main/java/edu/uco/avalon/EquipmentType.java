@@ -28,6 +28,4 @@ public class EquipmentType {
     public void setLastUpdatedBy(String lastUpdatedBy) { this.lastUpdatedBy = lastUpdatedBy; }
 
     public boolean isDeleted() { return isDeleted; }
-
-    public void setDeleted(boolean deleted) { isDeleted = deleted; }
 }

@@ -60,7 +60,6 @@ public class EquipmentRepository {
             String query = "INSERT INTO equipments(name, typeID, lastUpdatedDate, lastUpdatedBy) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, equipment.getName());
-            //ps.setString(2, equipment.getType());
             ps.setInt(2, equipment.getTypeID());
             ps.setTimestamp(3, Timestamp.valueOf(equipment.getLastUpdatedDate()));
             ps.setString(4, equipment.getLastUpdatedBy());
@@ -83,7 +82,6 @@ public class EquipmentRepository {
             String query = "UPDATE equipments SET name=?, typeID=?, lastUpdatedDate=?, lastUpdatedBy=? WHERE equipmentID=?";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, equipment.getName());
-            //ps.setString(2, equipment.getType());
             ps.setInt(2, equipment.getTypeID());
             ps.setTimestamp(3, Timestamp.valueOf(equipment.getLastUpdatedDate()));
             ps.setString(4, equipment.getLastUpdatedBy());
@@ -130,34 +128,5 @@ public class EquipmentRepository {
         }
         return generatedID;
     }
-
-    /*public static List<EquipmentType> readAllEquipmentType() throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null");
-        }
-
-        List<EquipmentType> equipmentTypeList = new ArrayList<>();
-
-        try {
-            String query = "SELECT * FROM lu_equipment_types eq";
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                EquipmentType equipmentType = new EquipmentType();
-                equipmentType.setEquipmentTypeID(rs.getInt("typeID"));
-                equipmentType.setDescription(rs.getString("description"));
-                equipmentType.setLastUpdatedDate(rs.getTimestamp("lastUpdatedDate").toLocalDateTime());
-                equipmentType.setLastUpdatedBy(rs.getString("lastUpdatedBy"));
-                equipmentType.setDeleted(rs.getBoolean("isDeleted"));
-                equipmentTypeList.add(equipmentType);
-            }
-        } finally {
-            conn.close();
-        }
-
-        return equipmentTypeList;
-    }*/
 }
 
