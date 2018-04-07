@@ -21,7 +21,7 @@
                 <b:commandButton  name="add" value="Create" icon="add"
                                   ajax="true"
                                   update=":listForm:scheduleTable"
-                                  onclick="ajax:schedule.create()">
+                                  onclick="schedule.create()">
                 </b:commandButton>
                 <f:facet name="footer">
                     <b:button value="Close" dismiss="modal" />
@@ -56,7 +56,7 @@
                             ajax="true"
                             icon="trash"
                             update="@(.editableCarTable)"
-                            onclick="ajax:schedule.delete(sche)">
+                            onclick="schedule.delete(sche)">
                     </b:commandButton>
                 </b:dataTableColumn>
             </b:dataTable>

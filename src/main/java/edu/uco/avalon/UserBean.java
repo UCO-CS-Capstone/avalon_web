@@ -4,16 +4,12 @@ package edu.uco.avalon;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 
 import javax.annotation.PostConstruct;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 
