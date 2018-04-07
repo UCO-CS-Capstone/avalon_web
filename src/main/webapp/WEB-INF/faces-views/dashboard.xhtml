@@ -21,7 +21,7 @@
                 <hr/>
                 <b:column>
                     <h3 class="text-center">Upcoming Maintenance</h3>
-                    <b:row style="padding-top: 20px" rendered="#{!equipmentBean.editingMaintenance}">
+                    <b:row style="padding-top: 20px">
                         <b:fullCalendar events="#{dashboardBean.getCalendarEventListJson()}"
                                         dayClick="function(calEvent, jsEvent, view){}"
                                         eventClick="function(calEvent, jsEvent, view){ window.location.href = '/equipment/' }"/>
