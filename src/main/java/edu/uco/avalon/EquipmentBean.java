@@ -9,6 +9,8 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,6 +87,23 @@ public class EquipmentBean implements Serializable {
                             (oldValue, newValue) -> oldValue, LinkedHashMap::new));
         } catch (Exception ex) {
             Logger.getLogger(EquipmentBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void checkGetQuery() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        Map<String, String> requestParams = context.getExternalContext().getRequestParameterMap();
+        static String detailID = "detailid";
+        if (requestParams.containsKey(detailID)) {
+            try {
+                String param = requestParams.get(detailID);
+                int id = Integer.parseInt(param);
+                equipmentDetail(id);
+                ExternalContext externalContext = context.getExternalContext();
+                externalContext.redirect(externalContext.getRequestContextPath() + "/equipment/detail");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

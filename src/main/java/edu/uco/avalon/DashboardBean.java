@@ -24,6 +24,7 @@ public class DashboardBean {
         for (Maintenance maintenance : maintenanceList) {
             java.util.Date date = Date.from(maintenance.getNextMaintenanceDate().atZone(ZoneId.systemDefault()).toInstant());
             CalendarEntry entry = new CalendarEntry(maintenance.getMaintenanceID(), maintenance.getDescription(), date);
+            entry.setEquipmentID(maintenance.getEquipmentID());
             list.getList().add(entry);
         }
 

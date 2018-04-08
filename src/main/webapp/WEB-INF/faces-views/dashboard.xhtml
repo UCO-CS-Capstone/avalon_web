@@ -24,7 +24,7 @@
                     <b:row style="padding-top: 20px">
                         <b:fullCalendar events="#{dashboardBean.getCalendarEventListJson()}"
                                         dayClick="function(calEvent, jsEvent, view){}"
-                                        eventClick="function(calEvent, jsEvent, view){ window.location.href = '/equipment/' }"/>
+                                        eventClick="function(calEvent, jsEvent, view){ window.location.href = '/equipment/?detailid=' + calEvent.equip_id }"/>
                     </b:row>
                 </b:column>
             </b:container>
