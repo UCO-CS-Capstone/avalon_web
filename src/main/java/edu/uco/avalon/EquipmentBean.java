@@ -93,7 +93,7 @@ public class EquipmentBean implements Serializable {
     public void checkGetQuery() {
         FacesContext context = FacesContext.getCurrentInstance();
         Map<String, String> requestParams = context.getExternalContext().getRequestParameterMap();
-        static String detailID = "detailid";
+        String detailID = "detailid";
         if (requestParams.containsKey(detailID)) {
             try {
                 String param = requestParams.get(detailID);
