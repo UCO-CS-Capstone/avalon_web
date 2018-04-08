@@ -19,39 +19,33 @@ public class CostAnalysisToolBean implements Serializable {
     /**
      *
      * @return
+     * @throws SQLException
      */
     public boolean isProductOwner() throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
-        }
+        try (Connection conn = ConnectionManager.getConnection()) {
 
-        PreparedStatement prepStat = conn.prepareStatement("select * from lu_roles r join users_roles_xref u on r.roleID = u.roleID where u.userID = ? and r.role = 'projectOwner'");
-        prepStat.setInt(1, loginBean.getUserID());
-        ResultSet rs = prepStat.executeQuery();
-        return rs.next();
+            PreparedStatement prepStat = conn.prepareStatement("SELECT * FROM lu_roles r JOIN users_roles_xref u ON r.roleID = u.roleID WHERE u.userID = ? AND r.role = 'projectOwner'");
+            prepStat.setInt(1, loginBean.getUserID());
+            ResultSet rs = prepStat.executeQuery();
+            return rs.next();
+        }
     }
 
     public List<Cost> getCosts() throws SQLException {
         List<Cost> staticCosts = new ArrayList<>();
 
-        Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/avalon_db", "root", "2gWAyA5VgWowBC9PtZHpExeAPUtAHDDmcixyHGKW4ZYTckeu3dzdioFTBaQqELVv");
-        if (conn == null) {
-            throw new SQLException("conn is null.");
+        try (Connection conn = ConnectionManager.getConnection()) {
+
+            PreparedStatement prepStat = conn.prepareStatement("SELECT sum(currentCost) FROM projects");
+            ResultSet rs = prepStat.executeQuery();
+            if (!rs.next()) {
+                throw new RuntimeException("wrong.");
+            }
+
+            staticCosts.add(new Cost("total project cost", rs.getBigDecimal(1).doubleValue()));
+            staticCosts.add(new Cost("maintenances cost(per day)", 24.3));
+            staticCosts.add(new Cost("milestone cost", 34.3));
+            return staticCosts;
         }
-
-        PreparedStatement prepStat = conn.prepareStatement("select sum(currentCost) from projects");
-        ResultSet rs = prepStat.executeQuery();
-        if (!rs.next()) {
-            throw new RuntimeException("wrong.");
-        }
-
-        staticCosts.add(new Cost("total project cost", rs.getBigDecimal(1).doubleValue()));
-        staticCosts.add(new Cost("maintenances cost(per day)", 24.3));
-        staticCosts.add(new Cost("milestone cost", 34.3));
-        return staticCosts;
-
     }
-
-
 }
