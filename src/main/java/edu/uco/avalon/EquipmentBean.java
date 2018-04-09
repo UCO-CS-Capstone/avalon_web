@@ -323,7 +323,7 @@ public class EquipmentBean implements Serializable {
         Faces.sendFile(data, filename, true);
     }
 
-    public FullCalendarEventList getCalendarEventList() throws SQLException {
+    public FullCalendarEventList getCalendarEventList() {
         FullCalendarEventList list = new FullCalendarEventList();
         for (Maintenance maintenance : this.maintenanceList) {
             Date date = Date.from(maintenance.getNextMaintenanceDate().atZone(ZoneId.systemDefault()).toInstant());
@@ -333,7 +333,7 @@ public class EquipmentBean implements Serializable {
         return list;
     }
 
-    public String getCalendarEventListJson() throws SQLException {
+    public String getCalendarEventListJson() {
         return this.getCalendarEventList().toJson();
     }
 
