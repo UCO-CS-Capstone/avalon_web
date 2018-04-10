@@ -1,3 +1,16 @@
+.navbar-brand {
+    padding: 15px;
+}
+.brand-img {
+    vertical-align: middle;
+    margin-top: -2px;
+    height: 35px;
+    padding-right: 7px;
+    fill: currentColor;
+}
+.brand-img path {
+    fill: currentColor;
+}
 #reports {
     margin: 30px 0;
 }
