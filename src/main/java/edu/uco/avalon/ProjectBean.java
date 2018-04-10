@@ -12,6 +12,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import java.io.*;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -121,6 +122,18 @@ public class ProjectBean implements Serializable {
                         "Start Date cannot be after Estimated End Date.", null);
                 FacesContext.getCurrentInstance().addMessage("project", facesMessage);
             }
+        }
+        if(Helpers.parse(this.estCostOverall, Locale.US).compareTo(new BigDecimal("999999999999.99")) == 1) {
+            isError = true;
+            FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Estimated Cost Overall must be less than 1 trillion.", null);
+            FacesContext.getCurrentInstance().addMessage("project", facesMessage);
+        }
+        if(Helpers.parse(this.currentCost, Locale.US).compareTo(new BigDecimal("999999999999.99")) == 1) {
+            isError = true;
+            FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Current Cost must be less than 1 trillion.", null);
+            FacesContext.getCurrentInstance().addMessage("project", facesMessage);
         }
 
         if (!isError) {
