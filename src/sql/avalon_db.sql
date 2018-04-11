@@ -214,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `userID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `first_name` varchar(256) NOT NULL,
   `last_name` varchar(256) NOT NULL,
-  `email` varchar(50) NOT NULL,
+  `email` varchar(256) NOT NULL,
   `password` varchar(256) NOT NULL,
   `flagID` int(10) unsigned DEFAULT NULL,
   `lastUpdatedDate` datetime NOT NULL,
