@@ -1,20 +1,25 @@
 package edu.uco.avalon;
 
+import org.omnifaces.cdi.Cookie;
+import org.omnifaces.util.Faces;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static org.mariadb.jdbc.internal.com.send.ed25519.Utils.bytesToHex;
 
 /**
  * Allows for user login, logout, and registration.
@@ -22,74 +27,16 @@ import java.util.logging.Logger;
  */
 @Named
 @SessionScoped
-public class LoginBean implements Serializable {
+public class LoginBean extends User implements Serializable {
 
-    /**
-     * Contains validation patterns, values, and messages
-     */
-    public interface validation {
-        interface email {
-            /**
-             * Crazy long regex string which supposedly matches 99.99% of valid emails
-             * http://emailregex.com/
-             **/
-            String pattern = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
-            String message = "Not a valid email address";
-        }
-
-        interface name {
-            /**
-             * Do not allow certain characters in name fields
-             */
-            String pattern = "^[^±!@£$%^&*_+§¡€#¢§¶•ªº«\\\\/<>?:;|=.,]*$";
-            String message = "Invalid character";
-        }
-
-        interface required {
-            int value = 1;
-            String message = "This is a required field";
-        }
-
-        interface max {
-            int value = 50;
-            String message = "This field allows up to {max} characters";
-        }
-    }
-
-    private int userID;
-
-    @Size.List({
-        @Size(min = validation.required.value, message = validation.required.message),
-        @Size(max = validation.max.value, message = validation.max.message)
-    })
-    @Pattern(regexp = validation.name.pattern, message = validation.name.message)
-    private String firstName;
-
-    @Size.List({
-        @Size(min = validation.required.value, message = validation.required.message),
-        @Size(max = validation.max.value, message = validation.max.message)
-    })
-    @Pattern(regexp = validation.name.pattern, message = validation.name.message)
-    private String lastName;
-
-    @Size.List({
-        @Size(min = validation.required.value, message = validation.required.message),
-        @Size(max = validation.max.value, message = validation.max.message)
-    })
-    @Pattern(regexp = validation.email.pattern, message = validation.email.message)
-    private String email;
-
-    @Size.List({
-        @Size(min = validation.required.value, message = validation.required.message),
-        @Size(max = validation.max.value, message = validation.max.message)
-    })
-    private String password;
+    private boolean loggedIn = false;
 
     private int attempts = 0;
 
-    private boolean locked = false;
+    private boolean rememberMe = true;
 
-    private boolean loggedIn = false;
+    @Inject @Cookie(name = "UUID")
+    private String uuid = null;
 
     @PostConstruct
     public void init() {
@@ -98,6 +45,66 @@ public class LoginBean implements Serializable {
         } catch (Exception e) {
             Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, e);
         }
+    }
+
+    /**
+     * Helper to copy a User object's variables to the current Bean
+     *
+     * @param user
+     */
+    private void copyOut(User user) {
+        if (user != null) {
+            setUserID(user.getUserID());
+            setFirstName(user.getFirstName());
+            setLastName(user.getLastName());
+            setEmail(user.getEmail());
+            setPassword(user.getPassword());
+            setLocked(user.isLocked());
+            loggedIn = true;
+        }
+    }
+
+    /**
+     * Generate a random SHA-256 string for remember me functionality
+     *
+     * @return digest
+     */
+    private String generateUUID() {
+        MessageDigest salt = null;
+        try {
+            salt = MessageDigest.getInstance("SHA-256");
+            salt.update(UUID.randomUUID().toString().getBytes("UTF-8"));
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String digest = bytesToHex(salt.digest());
+        return digest;
+    }
+
+    /**
+     * If there is a persistent session set then login automatically
+     *
+     * @throws SQLException
+     */
+    public void checkPersistentSession() throws SQLException {
+        if (uuid != null) {
+            int userID = UserRepository.getPersistentSession(uuid);
+            if (userID != -1) {
+                User user = UserRepository.getUserByID(userID, true);
+                copyOut(user);
+            }
+        }
+    }
+
+    /**
+     * Creates a "Remember Me" session
+     *
+     * @throws SQLException
+     */
+    public void initPersistentSession() throws SQLException {
+        String newUUID = generateUUID();
+        Faces.addResponseCookie("UUID", newUUID, 31536000);
+        UserRepository.addPersistentSession(newUUID, userID);
     }
 
     /**
@@ -110,45 +117,26 @@ public class LoginBean implements Serializable {
         try (Connection conn = ConnectionManager.getConnection()) {
             // Lock out
             if (attempts >= 5 || locked) {
-                email = "";
-                password = "";
-                loggedIn = false;
                 locked = true;
 
                 FacesContext fc = FacesContext.getCurrentInstance();
                 fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Too many login attempts. Please contact the administrator at (555) 867-5309 or click on \"Contact\" in the footer."));
-                String sql = "UPDATE users SET flagID = 1 WHERE email = ?";
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setString(1, email);
-                ps.execute();
+                UserRepository.lockUserAccount(email);
                 return "";
             }
 
             // Attempt login
+            User user = UserRepository.getUserByEmail(email, true);
             PasswordHash ph = PasswordHash.getInstance();
-            String sql = "SELECT * FROM users WHERE email = ?  AND flagID IS NULL";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, this.email);
-            ResultSet rs = ps.executeQuery();
-            String hashed;
-            if (rs.next()) {
-                hashed = rs.getString("password");
-
-                if (ph.verify(hashed, this.password)) {
-                    // Success
-                    loggedIn = true;
-
-                    userID = rs.getInt("userID");
-                    firstName = rs.getString("first_name");
-                    lastName = rs.getString("last_name");
-                    email = rs.getString("email");
-                    password = "";
+            if (user != null) {
+                if (ph.verify(user.getPassword(), password)) {
+                    copyOut(user);
                 }
             }
         }
 
         // Failure
-        if (!this.loggedIn) {
+        if (!loggedIn) {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Invalid username or password."));
 
@@ -157,6 +145,9 @@ public class LoginBean implements Serializable {
             ++attempts;
             return "";
         } else {
+            if (rememberMe) {
+                initPersistentSession();
+            }
             return "/dashboard?faces-redirect=true";
         }
     }
@@ -169,15 +160,7 @@ public class LoginBean implements Serializable {
      */
     public String register() throws SQLException {
         try (Connection conn = ConnectionManager.getConnection()) {
-            PasswordHash ph = PasswordHash.getInstance();
-            String sql = "INSERT INTO users (first_name, last_name, email, password, lastUpdatedDate, lastUpdatedBy) VALUES (?, ?, ?, ?, curdate(), ?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, firstName);
-            ps.setString(2, lastName);
-            ps.setString(3, email);
-            ps.setString(4, ph.hash(password));
-            ps.setInt(5, 0);
-            ps.execute();
+            UserRepository.createUserAccount(this);
             loggedIn = true;
             password = "";
         }
@@ -190,43 +173,14 @@ public class LoginBean implements Serializable {
      *
      * @throws IOException
      */
-    public void logout() throws IOException {
+    public void logout() throws SQLException {
+        if (uuid != null) {
+            UserRepository.deletePersistentSession(uuid);
+        }
         loggedIn = false;
-        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        ec.invalidateSession();
-        ec.redirect(ec.getRequestContextPath() + "/");
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+        Faces.addResponseCookie("UUID", null, 0);
+        Faces.invalidateSession();
+        Faces.redirect(Faces.getRequestContextPath() + "/");
     }
 
     public int getAttempts() {
@@ -237,22 +191,6 @@ public class LoginBean implements Serializable {
         this.attempts = attempts;
     }
 
-    public int getUserID() {
-        return userID;
-    }
-
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
-    public boolean isLocked() {
-        return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        locked = locked;
-    }
-
     public boolean isLoggedIn() {
         return loggedIn;
     }
@@ -261,7 +199,11 @@ public class LoginBean implements Serializable {
         this.loggedIn = loggedIn;
     }
 
-    public String getFullname() {
-        return this.firstName + ' ' + this.lastName;
+    public boolean getRememberMe() {
+        return rememberMe;
+    }
+
+    public void setRememberMe(boolean rememberMe) {
+        this.rememberMe = rememberMe;
     }
 }
