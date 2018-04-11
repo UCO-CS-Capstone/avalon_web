@@ -81,6 +81,19 @@ public class UserRepository {
     }
 
     /**
+     * Gets a User from a persistent session ID (Remeber Me)
+     *
+     * @param sessionID persistent session ID
+     * @return User
+     * @throws SQLException
+     */
+    public static User getUserByPersistentSession(String sessionID) throws SQLException {
+        int userID = UserRepository.getPersistentSession(sessionID);
+        User user = UserRepository.getUserByID(userID, true);
+        return user;
+    }
+
+    /**
      * Set a user's flag to locked
      *
      * @param email Where clause
@@ -116,11 +129,10 @@ public class UserRepository {
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 int userID = rs.getInt("userID");
-                user.setUserID(userID);
                 return userID;
             }
         }
-        return -1;
+        throw new SQLException("Could not create new user account");
     }
 
     /**
@@ -157,7 +169,7 @@ public class UserRepository {
                 return rs.getInt("userID");
             }
         }
-        return -1;
+        throw new SQLException("Entry not found for given session ID");
     }
 
     /**

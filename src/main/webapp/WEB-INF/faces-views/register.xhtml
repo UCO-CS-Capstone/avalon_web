@@ -10,9 +10,11 @@
         <ui:define name="content">
             <b:container>
                 <b:column span="6" offset="3">
-                    <h:form>
+                    <h:form id="register">
                         <h1>Register</h1>
                         <hr/>
+
+                        <b:messages for="register"/>
 
                         <b:inputText id="firstName" label="First Name" value="#{loginBean.firstName}">
                             <f:facet name="prepend">
