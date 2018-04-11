@@ -14,28 +14,28 @@
                         <h1>Register</h1>
                         <hr/>
 
-                        <b:inputText id="firstName" label="First Name" value="#{loginBean.firstName}" required="true">
+                        <b:inputText id="firstName" label="First Name" value="#{loginBean.firstName}">
                             <f:facet name="prepend">
                                 <b:iconAwesome name="user" />
                             </f:facet>
                         </b:inputText>
                         <b:message for="@previous"/>
 
-                        <b:inputText id="lastName" label="Last Name" value="#{loginBean.lastName}" required="true">
+                        <b:inputText id="lastName" label="Last Name" value="#{loginBean.lastName}">
                             <f:facet name="prepend">
                                 <b:iconAwesome name="user" />
                             </f:facet>
                         </b:inputText>
                         <b:message for="@previous"/>
 
-                        <b:inputText id="email" label="Email address" value="#{loginBean.email}" required="true">
+                        <b:inputText id="email" label="Email address" value="#{loginBean.email}">
                             <f:facet name="prepend">
                                 <b:iconAwesome name="envelope" />
                             </f:facet>
                         </b:inputText>
                         <b:message for="@previous"/>
 
-                        <b:inputText id="password" label="Password" type="password" value="#{loginBean.password}" required="true">
+                        <b:inputText id="password" label="Password" type="password" value="#{loginBean.password}">
                             <f:facet name="prepend">
                                 <b:iconAwesome name="key" />
                             </f:facet>
