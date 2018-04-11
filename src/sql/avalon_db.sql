@@ -244,6 +244,17 @@ CREATE TABLE IF NOT EXISTS `users_roles_xref` (
   CONSTRAINT `FK_users_roles_xref_users` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `persistent_session`;
+CREATE TABLE `persistent_session` (
+  `sessionID` varchar(100) NOT NULL,
+  `userID` int(10) unsigned NOT NULL,
+  `timestamp` datetime NOT NULL,
+  PRIMARY KEY (`sessionID`),
+  UNIQUE KEY `persistent_session_sessionID_uindex` (`sessionID`),
+  KEY `persistent_session_users_userID_fk` (`userID`),
+  CONSTRAINT `persistent_session_users_userID_fk` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 -- Dumping data for table avalon_db.users_roles_xref: ~0 rows (approximately)
 /*!40000 ALTER TABLE `users_roles_xref` DISABLE KEYS */;
 /*!40000 ALTER TABLE `users_roles_xref` ENABLE KEYS */;

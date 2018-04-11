@@ -7,6 +7,9 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets">
 
     <ui:composition template="/applayout/pageTemplate.xhtml">
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{loginBean.checkPersistentSession}" />
+        </f:metadata>
         <ui:define name="content">
             <b:container>
                 <b:column span="6" offset="3">
@@ -30,7 +33,7 @@
                         </b:inputText>
                         <b:message for="password" />
 
-                        <b:selectBooleanCheckbox value="true" caption="Remember Me"/>
+                        <b:selectBooleanCheckbox value="#{loginBean.rememberMe}" caption="Remember Me"/>
 
                         <b:column span="12">
                             <b:commandButton action="#{loginBean.login}" look="primary btn-block" colSm="6" value="Sign In" iconAwesome="sign-in"/>
