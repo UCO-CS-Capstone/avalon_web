@@ -69,7 +69,7 @@ public class EquipmentRepository {
                 if (generatedKeys.next()) {
                     generatedID = generatedKeys.getInt(1);
                 } else {
-                    throw new SQLException("Creating user loginFailed, no ID obtained.");
+                    throw new SQLException("Creating user failed, no ID obtained.");
                 }
             }
 
@@ -119,7 +119,7 @@ public class EquipmentRepository {
                 if (generatedKeys.next()) {
                     generatedID = generatedKeys.getInt(1);
                 } else {
-                    throw new SQLException("Creating user loginFailed, no ID obtained.");
+                    throw new SQLException("Creating user failed, no ID obtained.");
                 }
             }
 
