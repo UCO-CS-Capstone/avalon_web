@@ -131,12 +131,17 @@ public class LoginBean extends User implements Serializable {
             if (user != null) {
                 if (ph.verify(user.getPassword(), password)) {
                     copyOut(user);
+                    if (rememberMe) {
+                        initPersistentSession();
+                    }
                 }
             }
         }
 
         // Failure
-        if (!loggedIn) {
+        if (loggedIn) {
+            return "/dashboard?faces-redirect=true";
+        } else {
             FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed.", "Invalid username or password."));
 
@@ -144,11 +149,6 @@ public class LoginBean extends User implements Serializable {
             loggedIn = false;
             ++attempts;
             return "";
-        } else {
-            if (rememberMe) {
-                initPersistentSession();
-            }
-            return "/dashboard?faces-redirect=true";
         }
     }
 
@@ -161,6 +161,9 @@ public class LoginBean extends User implements Serializable {
     public String register() throws SQLException {
         try (Connection conn = ConnectionManager.getConnection()) {
             UserRepository.createUserAccount(this);
+            if (rememberMe) {
+                initPersistentSession();
+            }
             loggedIn = true;
             password = "";
         }

@@ -14,7 +14,7 @@ public class UserRepository {
      * @return User
      * @throws SQLException
      */
-    private static User createUser(ResultSet rs) throws SQLException {
+    private static User createUserFromResultSet(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserID(rs.getInt("userID"));
         user.setFirstName(rs.getString("first_name"));
@@ -48,7 +48,7 @@ public class UserRepository {
             ps.setInt(1, userID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                User user = createUser(rs);
+                User user = createUserFromResultSet(rs);
                 return user;
             }
         }
@@ -73,7 +73,7 @@ public class UserRepository {
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                User user = createUser(rs);
+                User user = createUserFromResultSet(rs);
                 return user;
             }
         }
@@ -91,7 +91,7 @@ public class UserRepository {
             String sql = "UPDATE users SET flagID = 1 WHERE email = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
-            ps.execute();
+            ps.executeUpdate();
         }
     }
 
@@ -101,18 +101,26 @@ public class UserRepository {
      * @param user User
      * @throws SQLException
      */
-    public static void createUserAccount(User user) throws SQLException {
+    public static int createUserAccount(User user) throws SQLException {
         try (Connection conn = ConnectionManager.getConnection()) {
             PasswordHash ph = PasswordHash.getInstance();
             String sql = "INSERT INTO users (first_name, last_name, email, password, lastUpdatedDate, lastUpdatedBy) VALUES (?, ?, ?, ?, curdate(), ?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
             ps.setString(3, user.getEmail());
             ps.setString(4, ph.hash(user.getPassword()));
             ps.setInt(5, 0);
-            ps.execute();
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                int userID = rs.getInt("userID");
+                user.setUserID(userID);
+                return userID;
+            }
         }
+        return -1;
     }
 
     /**
@@ -128,7 +136,7 @@ public class UserRepository {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sessionID);
             ps.setInt(2, userID);
-            ps.executeQuery();
+            ps.executeUpdate();
         }
     }
 
@@ -163,7 +171,7 @@ public class UserRepository {
             String sql = "DELETE FROM persistent_session WHERE sessionID = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sessionID);
-            ps.execute();
+            ps.executeUpdate();
         }
     }
 }
