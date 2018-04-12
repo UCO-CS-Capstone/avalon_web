@@ -23,10 +23,10 @@
                         <b:modal id="amodal2" title="Enter Information" styleClass="modalPseudoClass2"
                                  closable="false"  close-on-escape="false" backdrop="false">
 
-
+                            <b:inputText id = "user_ID" value = "#{userBean.userID}" type = "hidden" />
                             <b:inputText required="true" id = "first_name" value = "#{userBean.first}" label="First Name" />
                             <b:inputText required="true" id = "last_last" value = "#{userBean.last}" label="Last Name" />
-                            <b:inputText required="true" id = "email" value = "#{userBean.email}" label="User Name" />
+                            <b:inputText required="true" id = "email" value = "#{userBean.email}" label="Email" />
                             <b:inputSecret required="true" id = "password" value = "#{userBean.password}" label="Password" />
                             <b:inputText required="true" id = "flagID" value = "#{userBean.flagID}" label="Flag (0-3)" />
 

@@ -66,23 +66,14 @@
 
 
                     var data = {
-                        labels: ["Estimated Cost", "Current Cost", "Difference"],
+                        labels: ["Estimated Cost", "Current Cost", "Remaining Budget"],
 
                         datasets: [{
                             label: name,
-                            backgroundColor: "rgba(240,0,0,0.2)",
+                            backgroundColor: "rgba(51, 153, 153, 0.9)",
 
-                            data: [ cost, cost - current, current ]
-                        }, {
-                            label: "Project 2",
-                            backgroundColor: "rgba(0,0,200,0.2)",
-                            data: [ 12, 50 ,120 ]
-                        },
-                            {
-                                label: "Project 1",
-                                backgroundColor: "rgba(200,200,250,0.6)",
-                                data: [120, 33, 33]
-                            }],
+                            data: [ cost, current , cost - current ]
+                        }],
 
 
                         borderWidth: 1,
