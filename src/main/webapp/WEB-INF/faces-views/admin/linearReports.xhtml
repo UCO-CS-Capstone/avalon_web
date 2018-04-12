@@ -61,28 +61,19 @@
                 window.canvas = ctx.canvas;
 
 
-                function printInfo(name, cost , current) {
+                function printInfo(name, cost  , current) {
 
 
 
                     var data = {
 
-                        labels: ["Estimated Cost", "Current Cost", "Difference"],
+                        labels: ["Estimated Cost", "Current Cost", "Remaining Budget"],
                         datasets: [{
                             label: name,
-                            backgroundColor: "rgba(240,0,0,0.2)",
+                            backgroundColor: "rgba(191, 63, 127, 0.9)",
 
-                            data: [ cost, current - cost, current ]
-                        }, {
-                            label: "Project 2",
-                            backgroundColor: "rgba(0,0,200,0.2)",
-                            data: [234 , 44, 56]
-                        },
-                            {
-                                label: "Project 1",
-                                backgroundColor: "rgba(200,200,250,0.6)",
-                                data: [current, 333 , 54]
-                            }],
+                            data: [ cost, current , cost - current ]
+                        }],
 
 
                         borderWidth: 1,

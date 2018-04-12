@@ -15,12 +15,12 @@
 
 
 
-                        <b:inputText id = "user_ID" value = "#{userBean.userID}" type = "hidden" />
-                        <b:inputText id = "first_name" value = "#{userBean.first}" label="First Name" />
-                        <b:inputText id = "last_name" value = "#{userBean.last}" label="Last Name" />
-                        <b:inputText id = "email" value = "#{userBean.email}" label="Email" />
-                        <b:inputText id = "password" value = "#{userBean.password}" label="Password" />
-                        <b:inputText id = "flagID" value = "#{userBean.flagID}" label="Flag" />
+                        <b:inputText required="true" id = "user_ID" value = "#{userBean.userID}" type = "hidden" />
+                        <b:inputText required="true" id = "first_name" value = "#{userBean.first}" label="First Name" />
+                        <b:inputText required="true" id = "last_name" value = "#{userBean.last}" label="Last Name" />
+                        <b:inputText required="true" id = "email" value = "#{userBean.email}" label="Email" />
+                        <b:inputText required="true" id = "password" value = "#{userBean.password}" label="Password" />
+                        <b:inputText required="true" id = "flagID" value = "#{userBean.flagID}" label="Flag" />
 
 
                         <b:commandButton id="createButton" action="#{userBean.updateUser}" iconAwesome="plus" value="Edit User" look="primary" />
