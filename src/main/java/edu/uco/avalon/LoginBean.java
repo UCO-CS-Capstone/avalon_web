@@ -94,7 +94,7 @@ public class LoginBean extends User implements Serializable {
     public void initPersistentSession() {
         try {
             String newUUID = generateUUID();
-            Faces.addResponseCookie("UUID", newUUID, 31536000);
+            Faces.addResponseCookie("UUID", newUUID, UserRepository.PERSISTENT_TIME);
             UserRepository.addPersistentSession(newUUID, userID);
         } catch (SQLException e) {
             e.printStackTrace();

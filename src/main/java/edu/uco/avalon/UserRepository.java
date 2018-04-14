@@ -8,6 +8,36 @@ import java.sql.SQLException;
 public class UserRepository {
 
     /**
+     * Common time values as seconds
+     */
+    public interface secondsIn {
+        /**
+         * 1 day in seconds
+         */
+        int day = 60 * 60 * 24;
+
+        /**
+         * 1 week in seconds
+         */
+        int week = 60 * 60 * 24 * 7;
+
+        /**
+         * 1 month in seconds
+         */
+        int month = 60 * 60 * 24 * 31;
+
+        /**
+         * 1 year in seconds
+         */
+        int year = 60 * 60 * 24 * 365;
+    }
+
+    /**
+     * The length of time that a "Remember Me" session should last
+     */
+    public static final int PERSISTENT_TIME = secondsIn.month;
+
+    /**
      * Creates a user from a ResultSet
      *
      * @param rs ResultSet
@@ -153,7 +183,7 @@ public class UserRepository {
     }
 
     /**
-     * Gets a persistent session from the database (Remember Me)
+     * Gets a persistent session from the database (Remember Me) within the last PERSISTENT_TIME seconds
      *
      * @param sessionID Random session ID
      * @return Associated User ID
@@ -161,9 +191,10 @@ public class UserRepository {
      */
     public static int getPersistentSession(String sessionID) throws SQLException {
         try (Connection conn = ConnectionManager.getConnection()) {
-            String sql = "SELECT * FROM persistent_session WHERE sessionID = ?";
+            String sql = "SELECT * FROM persistent_session WHERE sessionID = ? AND timestamp > DATE_SUB(NOW(), INTERVAL ? SECOND)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sessionID);
+            ps.setInt(2, PERSISTENT_TIME);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt("userID");
