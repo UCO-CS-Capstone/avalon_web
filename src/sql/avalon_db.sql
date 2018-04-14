@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `maintenances` (
   `maintenanceID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `description` varchar(50) NOT NULL,
   `equipmentID` int(10) unsigned NOT NULL,
-  `cost` decimal(10,2) unsigned NOT NULL,
+  `cost` decimal(14,2) unsigned NOT NULL,
   `nextMaintenanceDate` datetime NOT NULL,
   `lastUpdatedDate` datetime NOT NULL,
   `lastUpdatedBy` varchar(50) NOT NULL,

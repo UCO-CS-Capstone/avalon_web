@@ -9,12 +9,14 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -171,6 +173,26 @@ public class EquipmentBean implements Serializable {
         maintenanceList = MaintenanceRepository.readAllMaintenance().stream().
                 filter(x -> !x.isDeleted() && x.getEquipmentID() == equipmentID).collect(Collectors.toList());
         return "/equipment/detail";
+    }
+
+    public void validateMaintenance() throws Exception {
+        boolean isError = false;
+
+        if(Helpers.parse(this.cost, Locale.US).compareTo(new BigDecimal("999999999999.99")) == 1) {
+            isError = true;
+            FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Cost must be less than 1 trillion.", null);
+            FacesContext.getCurrentInstance().addMessage("maintenance", facesMessage);
+        }
+
+        if (!isError) {
+            if (this.maintenanceID == 0) {
+                this.createMaintenance();
+            }
+            else {
+                this.editMaintenance();
+            }
+        }
     }
 
     public void createMaintenance() throws Exception {

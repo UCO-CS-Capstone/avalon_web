@@ -67,7 +67,9 @@
                     </b:column>
                     <b:column col-md="4">
                         <b:well>
-                            <b:form id="createMaintenanceForm">
+                            <b:form id="maintenance">
+                                <b:message for="maintenance" />
+
                                 <h:outputText value="Record Maintenance" rendered="#{!equipmentBean.editingMaintenance}" styleClass="h3" />
                                 <h:outputText value="Edit Maintenance" rendered="#{equipmentBean.editingMaintenance}" styleClass="h3" />
                                 <b:inputText id="description" value="#{equipmentBean.description}" label="Description" required="true" />
@@ -76,8 +78,8 @@
                                 <b:message for="@previous" />
                                 <b:dateTimePicker id="nextMaintenanceDate" value="#{equipmentBean.nextMaintenanceDate}" label="Next Maintenance Date" required="true" show-time="true" allow-input-toggle="true" useCurrent="false" />
                                 <b:message for="@previous" />
-                                <b:commandButton value="Record" look="success" iconAwesome="plus" action="#{equipmentBean.createMaintenance}" rendered="#{!equipmentBean.editingMaintenance}" />
-                                <b:commandButton value="Edit" look="success" iconAwesome="pencil-square-o" action="#{equipmentBean.editMaintenance}" rendered="#{equipmentBean.editingMaintenance}" />
+                                <b:commandButton value="Record" look="success" iconAwesome="plus" action="#{equipmentBean.validateMaintenance}" rendered="#{!equipmentBean.editingMaintenance}" />
+                                <b:commandButton value="Edit" look="success" iconAwesome="pencil-square-o" action="#{equipmentBean.validateMaintenance}" rendered="#{equipmentBean.editingMaintenance}" />
                             </b:form>
                         </b:well>
                     </b:column>
