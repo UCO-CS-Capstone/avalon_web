@@ -256,7 +256,7 @@ CREATE TABLE `persistent_session` (
   UNIQUE KEY `persistent_session_sessionID_uindex` (`sessionID`),
   KEY `persistent_session_users_userID_fk` (`userID`),
   CONSTRAINT `persistent_session_users_userID_fk` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table avalon_db.users_roles_xref: ~0 rows (approximately)
 /*!40000 ALTER TABLE `users_roles_xref` DISABLE KEYS */;
