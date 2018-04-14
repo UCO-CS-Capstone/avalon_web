@@ -1,5 +1,9 @@
 package edu.uco.avalon;
 
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.CityResponse;
+import com.maxmind.geoip2.model.CountryResponse;
 import org.omnifaces.cdi.Cookie;
 import org.omnifaces.util.Faces;
 
@@ -9,8 +13,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
@@ -103,15 +110,18 @@ public class LoginBean extends User implements Serializable {
 
     /**
      * If there is a persistent session set then login automatically
+     *
+     * @return True if successful login, else false.
      */
-    public void checkPersistentSession() {
+    public boolean checkPersistentSession() {
+        if (loggedIn) return true;
         try {
             if (uuid != null) {
                 ++attempts;
                 User user = UserRepository.getUserByPersistentSession(uuid);
                 if (attempts < 5) {
                     copyOut(user);
-                    Faces.redirect("dashboard");
+                    return true;
                 } else {
                     locked = true;
                     UserRepository.lockUserAccount(user.getEmail());
@@ -122,7 +132,9 @@ public class LoginBean extends User implements Serializable {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            Faces.addResponseCookie("UUID", null, 0);
         }
+        return false;
     }
 
     /**

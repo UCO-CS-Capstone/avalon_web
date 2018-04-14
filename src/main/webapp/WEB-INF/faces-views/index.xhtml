@@ -7,9 +7,6 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets">
 
     <ui:composition template="/applayout/pageTemplate.xhtml">
-        <f:metadata>
-            <f:event type="preRenderView" listener="#{loginBean.checkPersistentSession}" />
-        </f:metadata>
         <ui:define name="content">
             <b:container>
                 <b:column span="6" offset="3">

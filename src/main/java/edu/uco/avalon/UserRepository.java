@@ -1,5 +1,13 @@
 package edu.uco.avalon;
 
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.CountryResponse;
+import org.omnifaces.util.Faces;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -165,6 +173,19 @@ public class UserRepository {
         throw new SQLException("Could not create new user account");
     }
 
+    public static String getUserCountry() {
+        try {
+            File database = new File(Faces.getRealPath("WEB-INF") + "/GeoLite2-Country.mmdb");
+            DatabaseReader dbReader = new DatabaseReader.Builder(database).build();
+            InetAddress ipAddress = InetAddress.getByName(Faces.getRemoteAddr());
+            CountryResponse response = dbReader.country(ipAddress);
+            return response.getCountry().getName();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GeoIp2Exception ignored) {}
+        return "unknown";
+    }
+
     /**
      * Add a persistent session into the database (Remember Me)
      *
@@ -174,10 +195,12 @@ public class UserRepository {
      */
     public static void addPersistentSession(String sessionID, int userID) throws SQLException {
         try (Connection conn = ConnectionManager.getConnection()) {
-            String sql = "INSERT INTO persistent_session (sessionID, userID, timestamp) VALUES (?, ?, NOW())";
+            String sql = "INSERT INTO persistent_session (sessionID, userID, ip, country, timestamp) VALUES (?, ?, ?, ?, NOW())";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sessionID);
             ps.setInt(2, userID);
+            ps.setString(3, Faces.getRemoteAddr());
+            ps.setString(4, getUserCountry());
             ps.executeUpdate();
         }
     }
@@ -191,10 +214,11 @@ public class UserRepository {
      */
     public static int getPersistentSession(String sessionID) throws SQLException {
         try (Connection conn = ConnectionManager.getConnection()) {
-            String sql = "SELECT * FROM persistent_session WHERE sessionID = ? AND timestamp > DATE_SUB(NOW(), INTERVAL ? SECOND)";
+            String sql = "SELECT * FROM persistent_session WHERE sessionID = ? AND active = TRUE AND country = ? AND timestamp > DATE_SUB(NOW(), INTERVAL ? SECOND)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sessionID);
-            ps.setInt(2, PERSISTENT_TIME);
+            ps.setString(2, getUserCountry());
+            ps.setInt(3, PERSISTENT_TIME);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt("userID");
@@ -211,7 +235,7 @@ public class UserRepository {
      */
     public static void deletePersistentSession(String sessionID) throws SQLException {
         try (Connection conn = ConnectionManager.getConnection()) {
-            String sql = "DELETE FROM persistent_session WHERE sessionID = ?";
+            String sql = "UPDATE persistent_session SET active = FALSE WHERE sessionID = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, sessionID);
             ps.executeUpdate();

@@ -1,5 +1,7 @@
 package edu.uco.avalon;
 
+import org.omnifaces.util.Faces;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -22,41 +24,56 @@ public class AuthBean implements Serializable {
     @Inject
     private LoginBean loginBean;
 
-    private String viewId;
+    private String viewId = Faces.getViewId();
 
     /**
      * Any pages which a logged in user should not see
      */
-    private List unauthenticatedPages = Arrays.asList("/index.xhtml", "/register.xhtml");
+    private static final List unauthenticatedPages = Arrays.asList("/index.xhtml", "/register.xhtml");
 
     /**
      * Any pages which can be viewed publicly
      */
-    private List publicPages = Arrays.asList("/contact.xhtml", "/index.xhtml", "/register.xhtml");
+    private static final List publicPages = Arrays.asList("/contact.xhtml");
 
     /**
      * If the current page is allowed by the current user
      */
-    private boolean currentPageAllowed;
+    private boolean currentPageAllowed = false;
 
     @PostConstruct
     public void init() {
-        viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        currentPageAllowed = (publicPages.contains(viewId) || loginBean.isLoggedIn());
+        checkAuthentication();
     }
 
     /**
-     * If the user is not logged in and they should not be here, redirects to the login page.
-     * Else if the user is logged in and at the login page, redirect them into the site.
-     *
-     * @throws IOException
+     * Check the user's login status and make sure they are where they are supossed to be.
      */
-    public void redirectIfUnsafe() throws IOException {
-        if (!currentPageAllowed) {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/index.xhtml");
-        } else if (loginBean.isLoggedIn() && unauthenticatedPages.contains(viewId)) {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/dashboard.xhtml");
+    private void checkAuthentication() {
+        if (loginBean.isLoggedIn() || loginBean.checkPersistentSession()) {
+            // Logged in
+            if (inUnauthenticatedPages()) {
+                // At login or register pages, redirect into site
+                Faces.redirect("dashboard");
+            } else {
+                // Allow content to display
+                currentPageAllowed = true;
+            }
+        } else {
+            // Not logged in
+            if (inUnauthenticatedPages() || inPublicPages()) {
+                // At publicly viewable page
+                currentPageAllowed = true;
+            }
         }
+    }
+
+    public boolean inPublicPages() {
+        return publicPages.contains(viewId);
+    }
+
+    public boolean inUnauthenticatedPages() {
+        return unauthenticatedPages.contains(viewId);
     }
 
     public boolean isCurrentPageAllowed() {
