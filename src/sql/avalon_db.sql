@@ -216,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_name` varchar(256) NOT NULL,
   `email` varchar(256) NOT NULL,
   `password` varchar(256) NOT NULL,
-  `flagID` int(10) unsigned DEFAULT NULL,
+  `flagID` int(10) unsigned DEFAULT 0,
   `lastUpdatedDate` datetime NOT NULL,
   `lastUpdatedBy` varchar(50) NOT NULL,
   PRIMARY KEY (`userID`),

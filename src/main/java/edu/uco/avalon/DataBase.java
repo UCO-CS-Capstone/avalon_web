@@ -6,13 +6,21 @@ import java.util.ArrayList;
 
 public class DataBase {
 
+    public interface USER_FLAGS {
+        int ACTIVE = 0;
+        int LOCKED = 1;
+        int DELETED = 2;
+        int VERIFIED = 3;
+    }
+
     public static ArrayList<UserBean> allUsers() throws SQLException {
 
         ArrayList<UserBean> userList = new ArrayList<>();
 
         try (Connection conn = ConnectionManager.getConnection()) {
-            String query = "SELECT * FROM users";
+            String query = "SELECT * FROM users WHERE flagID != ?";
             PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, USER_FLAGS.DELETED);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -109,33 +117,48 @@ public class DataBase {
         return user;
     }
 
-    public static void deleteUser(int user) throws SQLException {
+    /**
+     * Changes the user flag in the database.
+     * See {@link USER_FLAGS}
+     * @param userID User to modify
+     * @param flag Flag string
+     * @throws SQLException
+     */
+    private static void changeFlag(int userID, int flagID) throws SQLException {
         try (Connection conn = ConnectionManager.getConnection()) {
-            String query = "delete from users WHERE userID=?";
+            String query = "update users set flagID = ? WHERE userID = ?";
             PreparedStatement ps = conn.prepareStatement(query);
-            ps.setInt(1, user);
+            ps.setInt(1, flagID);
+            ps.setInt(2, userID);
             ps.executeUpdate();
         }
     }
 
-
-
-
-    public static void lock(int user) throws SQLException {
-        try (Connection conn = ConnectionManager.getConnection()) {
-            String query = "update users set flagID = 1 WHERE userID=?";
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setInt(1, user);
-            ps.executeUpdate();
-        }
+    /**
+     * Delete a given user
+     * @param userID User to delete
+     * @throws SQLException
+     */
+    public static void deleteUser(int userID) throws SQLException {
+        changeFlag(userID, USER_FLAGS.DELETED);
     }
-    public static void unlock(int user) throws SQLException {
-        try (Connection conn = ConnectionManager.getConnection()) {
-            String query = "update users set flagID = 0 WHERE userID=?";
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setInt(1, user);
-            ps.executeUpdate();
-        }
+
+    /**
+     * Lock a given user account
+     * @param userID User to lock
+     * @throws SQLException
+     */
+    public static void lock(int userID) throws SQLException {
+        changeFlag(userID, USER_FLAGS.LOCKED);
+    }
+
+    /**
+     * Unlock a given user account
+     * @param userID User to unlock
+     * @throws SQLException
+     */
+    public static void unlock(int userID) throws SQLException {
+        changeFlag(userID, USER_FLAGS.ACTIVE);
     }
 
 

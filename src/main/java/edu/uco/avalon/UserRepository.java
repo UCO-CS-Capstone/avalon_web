@@ -80,7 +80,7 @@ public class UserRepository {
         try (Connection conn = ConnectionManager.getConnection()) {
             String sql = "SELECT * FROM users WHERE userID = ?";
             if (onlyActive) {
-                sql += " AND flagID IS NULL";
+                sql += " AND flagID = 0";
             }
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, userID);
@@ -105,7 +105,7 @@ public class UserRepository {
         try (Connection conn = ConnectionManager.getConnection()) {
             String sql = "SELECT * FROM users WHERE email = ?";
             if (onlyActive) {
-                sql += " AND flagID IS NULL";
+                sql += " AND flagID = 0";
             }
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);

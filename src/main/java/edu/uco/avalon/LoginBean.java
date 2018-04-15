@@ -66,7 +66,7 @@ public class LoginBean extends User implements Serializable {
      *
      * @param user
      */
-    private void copyOut(User user) {
+    private boolean copyOut(User user) {
         if (user != null) {
             setUserID(user.getUserID());
             setFirstName(user.getFirstName());
@@ -75,7 +75,9 @@ public class LoginBean extends User implements Serializable {
             setPassword(user.getPassword());
             setLocked(user.isLocked());
             loggedIn = true;
+            return true;
         }
+        return false;
     }
 
     /**
@@ -119,20 +121,23 @@ public class LoginBean extends User implements Serializable {
             if (uuid != null) {
                 ++attempts;
                 User user = UserRepository.getUserByPersistentSession(uuid);
-                if (attempts < 5) {
-                    copyOut(user);
-                    return true;
+                if (user != null) {
+                    if (attempts < 5) {
+                        return copyOut(user);
+                    } else {
+                        locked = true;
+                        UserRepository.lockUserAccount(user.getEmail());
+                        FacesContext fc = FacesContext.getCurrentInstance();
+                        fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, messages.shortLoginFailure, messages.locked));
+                        Faces.addResponseCookie("UUID", null, 0);
+                    }
                 } else {
-                    locked = true;
-                    UserRepository.lockUserAccount(user.getEmail());
-                    FacesContext fc = FacesContext.getCurrentInstance();
-                    fc.addMessage("login", new FacesMessage(FacesMessage.SEVERITY_ERROR, messages.shortLoginFailure, messages.locked));
-                    Faces.addResponseCookie("UUID", null, 0);
+                    logout();
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            Faces.addResponseCookie("UUID", null, 0);
+            logout();
         }
         return false;
     }
