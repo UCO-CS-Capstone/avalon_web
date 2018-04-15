@@ -161,13 +161,12 @@ public class UserRepository {
             ps.setString(2, user.getLastName());
             ps.setString(3, user.getEmail());
             ps.setString(4, ph.hash(user.getPassword()));
-            ps.setInt(5, 0);
+            ps.setString(5, "registration");
             ps.executeUpdate();
 
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
-                int userID = rs.getInt("userID");
-                return userID;
+                return rs.getInt("userID");
             }
         }
         throw new SQLException("Could not create new user account");
